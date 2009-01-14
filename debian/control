@@ -1,0 +1,46 @@
+Source: gtest
+Homepage: http://code.google.com/p/googletest/
+Section: devel
+Maintainer: Steve M. Robbins <smr@debian.org>
+Uploaders: Giuseppe Iuculano <giuseppe@iuculano.it>
+Priority: optional
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.8.0
+DM-Upload-Allowed: yes
+
+Package: gtest
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Google's framework for writing C++ tests (googletest)
+ Google's framework for writing C++ tests on a variety of platforms. Based on
+ the xUnit architecture. Supports automatic test discovery, a rich set of
+ assertions, user-defined assertions, death tests, fatal and non-fatal failures,
+ value- and type-parameterized tests, various options for running the tests, and
+ XML test report generation.
+
+Package: libgtest0
+Architecture: any
+Section: libs
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Google's framework for writing C++ tests - shared library
+ Google's framework for writing C++ tests on a variety of platforms. Based on 
+ the xUnit architecture. Supports automatic test discovery, a rich set of 
+ assertions, user-defined assertions, death tests, fatal and non-fatal failures, 
+ value- and type-parameterized tests, various options for running the tests, and 
+ XML test report generation.
+ .
+ This package contains the gtest shared library.
+
+Package: libgtest-dev
+Architecture: any
+Section: libdevel
+Depends: ${shlibs:Depends}, ${misc:Depends}, libgtest0 (= ${binary:Version})
+Description: Google's framework for writing C++ tests - header files
+ Google's framework for writing C++ tests on a variety of platforms. Based on
+ the xUnit architecture. Supports automatic test discovery, a rich set of
+ assertions, user-defined assertions, death tests, fatal and non-fatal failures,
+ value- and type-parameterized tests, various options for running the tests, and
+ XML test report generation.
+ .
+ This package contains the header files needed to link programs against
+ gtest.
