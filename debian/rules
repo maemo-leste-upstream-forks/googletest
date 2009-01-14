@@ -32,7 +32,7 @@ endif
 
 build: build-stamp
 
-build-stamp:  config.status
+build-stamp:  configure
 	$(MAKE)
 	touch $@
 	$(MAKE) check
