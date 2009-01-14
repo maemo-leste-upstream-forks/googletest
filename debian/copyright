@@ -1,0 +1,18 @@
+Format-Specification:
+    http://wiki.debian.org/Proposals/CopyrightFormat?action=recall&rev=143
+Upstream-Name: Google C++ Testing Framework
+Upstream-Source: http://code.google.com/p/googletest/
+
+Files: *
+Copyright: Copyright 2008, Google Inc.
+License: New BSD
+ On Debian systems the full text of the GNU General Public License v2 
+ can be found in the `/usr/share/common-licenses/GPL-2' file.
+
+Files: debian/*
+Copyright: 
+ Copyright 2008, Steve Robbins <smr@debian.org>, Giuseppe Iuculano <giuseppe@iuculano.it
+License: GAP
+ Copying and distribution of these files, with or without
+ modification, are permitted in any medium without royalty provided
+ the copyright notice and this notice are preserved.
