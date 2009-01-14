@@ -1,0 +1,7 @@
+gtest (1.2.1-1) unstable; urgency=low
+
+  * Initial Debian packaging. (Closes: #498162)
+
+ -- Steve M. Robbins <smr@debian.org>  Mon, 29 Dec 2008 22:17:21 -0600
+
+
