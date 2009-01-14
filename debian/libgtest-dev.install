@@ -1,0 +1,3 @@
+debian/gtest/usr/lib/*.so usr/lib
+debian/gtest/lib/*.a usr/lib
+debian/gtest/usr/include/gtest usr/include
