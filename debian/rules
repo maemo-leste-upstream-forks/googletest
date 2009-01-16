@@ -34,9 +34,8 @@ endif
 build: build-stamp
 
 build-stamp:  configure
-	$(MAKE)
+	$(MAKE) all check
 	touch $@
-	$(MAKE) check
 
 clean: 
 	dh_testdir
