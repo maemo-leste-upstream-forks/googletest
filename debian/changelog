@@ -1,12 +1,6 @@
-gtest (1.2.1-2) unstable; urgency=low
-
-  * [4cb4bad] Updated debian/copyright
-  * [1c57984] Added libgtest0 symbols file
-
- -- Giuseppe Iuculano <giuseppe@iuculano.it>  Sat, 07 Mar 2009 08:41:33 +0100
-
 gtest (1.2.1-1) unstable; urgency=low
 
+  [ Giuseppe Iuculano ]
   * Initial Debian packaging. (Closes: #498162)
 
- -- Giuseppe Iuculano <giuseppe@iuculano.it>  Sat, 17 Jan 2009 21:12:15 -0600
+ -- Steve M. Robbins <smr@debian.org>  Sat, 07 Mar 2009 15:38:05 -0600

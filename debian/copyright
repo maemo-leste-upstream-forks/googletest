@@ -5,8 +5,8 @@ Upstream-Source: http://code.google.com/p/googletest/
 
 Files: *
 Copyright: Copyright 2008, Google Inc.
-License: BSD-3
- On Debian systems the full text of the GNU General Public License v2 
+License: BSD-C3
+ On Debian systems the full text of the 3-clause BSD License 
  can be found in the `/usr/share/common-licenses/BSD' file.
 
 Files: debian/*
