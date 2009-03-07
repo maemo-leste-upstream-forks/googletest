@@ -5,13 +5,13 @@ Upstream-Source: http://code.google.com/p/googletest/
 
 Files: *
 Copyright: Copyright 2008, Google Inc.
-License: New BSD
+License: BSD-3
  On Debian systems the full text of the GNU General Public License v2 
- can be found in the `/usr/share/common-licenses/GPL-2' file.
+ can be found in the `/usr/share/common-licenses/BSD' file.
 
 Files: debian/*
 Copyright: 
- Copyright 2008, Steve Robbins <smr@debian.org>, Giuseppe Iuculano <giuseppe@iuculano.it
+ Copyright 2009, Steve Robbins <smr@debian.org>, Giuseppe Iuculano <giuseppe@iuculano.it
 License: GAP
  Copying and distribution of these files, with or without
  modification, are permitted in any medium without royalty provided
