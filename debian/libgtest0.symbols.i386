@@ -57,6 +57,8 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZN7testing24XmlUnitTestResultPrinterD1Ev@Base 1.2.1
  _ZN7testing25NullUnitTestResultPrinterD0Ev@Base 1.2.1
  _ZN7testing25NullUnitTestResultPrinterD1Ev@Base 1.2.1
+ _ZN7testing26GoogleTestFailureExceptionD0Ev@Base 1.2.1
+ _ZN7testing26GoogleTestFailureExceptionD1Ev@Base 1.2.1
  _ZN7testing27PrettyUnitTestResultPrinter11OnTestStartEPKNS_8TestInfoE@Base 1.2.1
  _ZN7testing27PrettyUnitTestResultPrinter13OnTestCaseEndEPKNS_8TestCaseE@Base 1.2.1
  _ZN7testing27PrettyUnitTestResultPrinter13OnUnitTestEndEPKNS_8UnitTestE@Base 1.2.1
@@ -71,6 +73,7 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZN7testing28FLAGS_gtest_break_on_failureE@Base 1.2.1
  _ZN7testing28FLAGS_gtest_catch_exceptionsE@Base 1.2.1
  _ZN7testing28FLAGS_gtest_death_test_styleE@Base 1.2.1
+ _ZN7testing28FLAGS_gtest_throw_on_failureE@Base 1.2.1
  _ZN7testing29FLAGS_gtest_stack_trace_depthE@Base 1.2.1
  _ZN7testing30UnitTestEventListenerInterface11OnTestStartEPKNS_8TestInfoE@Base 1.2.1
  _ZN7testing30UnitTestEventListenerInterface13OnTestCaseEndEPKNS_8TestCaseE@Base 1.2.1
@@ -86,6 +89,7 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZN7testing30UnitTestEventListenerInterfaceD0Ev@Base 1.2.1
  _ZN7testing30UnitTestEventListenerInterfaceD1Ev@Base 1.2.1
  _ZN7testing30UnitTestEventListenerInterfaceD2Ev@Base 1.2.1
+ _ZN7testing31FLAGS_gtest_death_test_use_forkE@Base 1.2.1
  _ZN7testing31TestPartResultReporterInterfaceD0Ev@Base 1.2.1
  _ZN7testing31TestPartResultReporterInterfaceD1Ev@Base 1.2.1
  _ZN7testing32ScopedFakeTestPartResultReporter20ReportTestPartResultERKNS_14TestPartResultE@Base 1.2.1
@@ -97,6 +101,7 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZN7testing32ScopedFakeTestPartResultReporterD0Ev@Base 1.2.1
  _ZN7testing32ScopedFakeTestPartResultReporterD1Ev@Base 1.2.1
  _ZN7testing32ScopedFakeTestPartResultReporterD2Ev@Base 1.2.1
+ _ZN7testing35FLAGS_gtest_also_run_disabled_testsE@Base 1.2.1
  _ZN7testing38FLAGS_gtest_show_internal_stack_framesE@Base 1.2.1
  _ZN7testing4Test14RecordPropertyEPKcS2_@Base 1.2.1
  _ZN7testing4Test14RecordPropertyEPKci@Base 1.2.1
@@ -112,10 +117,12 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZN7testing4TestD1Ev@Base 1.2.1
  _ZN7testing4TestD2Ev@Base 1.2.1
  _ZN7testing7FloatLEEPKcS1_ff@Base 1.2.1
+ _ZN7testing7MessageC1ERKS0_@Base 1.2.1
  _ZN7testing7MessageC1Ev@Base 1.2.1
  _ZN7testing7MessageD1Ev@Base 1.2.1
  _ZN7testing7MessagelsERKSbIwSt11char_traitsIwESaIwEE@Base 1.2.1
  _ZN7testing7MessagelsIA11_cEERS0_RKT_@Base 1.2.1
+ _ZN7testing7MessagelsIA2_cEERS0_RKT_@Base 1.2.1
  _ZN7testing7MessagelsIA3_cEERS0_RKT_@Base 1.2.1
  _ZN7testing7MessagelsIKcEERS0_RKPT_@Base 1.2.1
  _ZN7testing7MessagelsINS_8internal6StringEEERS0_RKT_@Base 1.2.1
@@ -154,6 +161,7 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZN7testing8UnitTestD0Ev@Base 1.2.1
  _ZN7testing8UnitTestD1Ev@Base 1.2.1
  _ZN7testing8UnitTestD2Ev@Base 1.2.1
+ _ZN7testing8internal10AlwaysTrueEv@Base 1.2.1
  _ZN7testing8internal10ParseInt32ERKNS_7MessageEPKcPi@Base 1.2.1
  _ZN7testing8internal10TestResult14RecordPropertyERKNS0_12TestPropertyE@Base 1.2.1
  _ZN7testing8internal10TestResult17AddTestPartResultERKNS_14TestPartResultE@Base 1.2.1
@@ -175,6 +183,7 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZN7testing8internal11ScopedTraceC2EPKciRKNS_7MessageE@Base 1.2.1
  _ZN7testing8internal11ScopedTraceD1Ev@Base 1.2.1
  _ZN7testing8internal11ScopedTraceD2Ev@Base 1.2.1
+ _ZN7testing8internal11ShouldShardEPKcS2_b@Base 1.2.1
  _ZN7testing8internal12AssertHelperC1ENS_18TestPartResultTypeEPKciS4_@Base 1.2.1
  _ZN7testing8internal12AssertHelperC2ENS_18TestPartResultTypeEPKciS4_@Base 1.2.1
  _ZN7testing8internal12TestInfoImpl15ClearTestResultEPNS_8TestInfoE@Base 1.2.1
@@ -186,7 +195,7 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZN7testing8internal12TestInfoImplD2Ev@Base 1.2.1
  _ZN7testing8internal12TestPropertyD1Ev@Base 1.2.1
  _ZN7testing8internal12TypeIdHelperINS_4TestEE6dummy_E@Base 1.2.1
- _ZN7testing8internal12UnitTestImpl11FilterTestsEv@Base 1.2.1
+ _ZN7testing8internal12UnitTestImpl11FilterTestsENS1_18ReactionToShardingE@Base 1.2.1
  _ZN7testing8internal12UnitTestImpl11GetTestCaseEPKcS3_PFvvES5_@Base 1.2.1
  _ZN7testing8internal12UnitTestImpl11RunAllTestsEv@Base 1.2.1
  _ZN7testing8internal12UnitTestImpl12ListAllTestsEv@Base 1.2.1
@@ -208,6 +217,9 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZN7testing8internal12UnitTestImplD2Ev@Base 1.2.1
  _ZN7testing8internal13CaptureStderrEv@Base 1.2.1
  _ZN7testing8internal13ColoredPrintfENS0_10GTestColorEPKcz@Base 1.2.1
+ _ZN7testing8internal13DeathTestImpl6PassedEb@Base 1.2.1
+ _ZN7testing8internal13DeathTestImplD0Ev@Base 1.2.1
+ _ZN7testing8internal13DeathTestImplD1Ev@Base 1.2.1
  _ZN7testing8internal13ExecDeathTest10AssumeRoleEv@Base 1.2.1
  _ZN7testing8internal13ExecDeathTestD0Ev@Base 1.2.1
  _ZN7testing8internal13ExecDeathTestD1Ev@Base 1.2.1
@@ -218,10 +230,11 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZN7testing8internal14CmpHelperSTREQEPKcS2_S2_S2_@Base 1.2.1
  _ZN7testing8internal14CmpHelperSTRNEEPKcS2_PKwS4_@Base 1.2.1
  _ZN7testing8internal14CmpHelperSTRNEEPKcS2_S2_S2_@Base 1.2.1
- _ZN7testing8internal14DeathTestAbortEPKcz@Base 1.2.1
+ _ZN7testing8internal14DeathTestAbortERKNS0_6StringE@Base 1.2.1
  _ZN7testing8internal14ParseFlagValueEPKcS2_b@Base 1.2.1
  _ZN7testing8internal14ParseInt32FlagEPKcS2_Pi@Base 1.2.1
  _ZN7testing8internal14ShouldUseColorEb@Base 1.2.1
+ _ZN7testing8internal14StackGrowsDownEv@Base 1.2.1
  _ZN7testing8internal15CodePointToUtf8EjPc@Base 1.2.1
  _ZN7testing8internal15FloatingPointLEIdEENS_15AssertionResultEPKcS4_T_S5_@Base 1.2.1
  _ZN7testing8internal15FloatingPointLEIfEENS_15AssertionResultEPKcS4_T_S5_@Base 1.2.1
@@ -229,17 +242,16 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZN7testing8internal15NoExecDeathTestD0Ev@Base 1.2.1
  _ZN7testing8internal15NoExecDeathTestD1Ev@Base 1.2.1
  _ZN7testing8internal15ParseStringFlagEPKcS2_PNS0_6StringE@Base 1.2.1
- _ZN7testing8internal15UnitTestOptions13GetOutputFileEv@Base 1.2.1
  _ZN7testing8internal15UnitTestOptions13MatchesFilterERKNS0_6StringEPKc@Base 1.2.1
  _ZN7testing8internal15UnitTestOptions15GetOutputFormatEv@Base 1.2.1
  _ZN7testing8internal15UnitTestOptions17FilterMatchesTestERKNS0_6StringES4_@Base 1.2.1
  _ZN7testing8internal15UnitTestOptions20PatternMatchesStringEPKcS3_@Base 1.2.1
+ _ZN7testing8internal15UnitTestOptions27GetAbsolutePathToOutputFileEv@Base 1.2.1
  _ZN7testing8internal16BoolFromGTestEnvEPKcb@Base 1.2.1
  _ZN7testing8internal16DeathTestFactoryD0Ev@Base 1.2.1
  _ZN7testing8internal16DeathTestFactoryD1Ev@Base 1.2.1
  _ZN7testing8internal16ForkingDeathTest4WaitEv@Base 1.2.1
  _ZN7testing8internal16ForkingDeathTest5AbortENS0_9DeathTest11AbortReasonE@Base 1.2.1
- _ZN7testing8internal16ForkingDeathTest6PassedEb@Base 1.2.1
  _ZN7testing8internal16ForkingDeathTestC1EPKcPKNS0_2REE@Base 1.2.1
  _ZN7testing8internal16ForkingDeathTestC2EPKcPKNS0_2REE@Base 1.2.1
  _ZN7testing8internal16ForkingDeathTestD0Ev@Base 1.2.1
@@ -248,6 +260,7 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZN7testing8internal16WideStringToUtf8EPKwi@Base 1.2.1
  _ZN7testing8internal17AppendUserMessageERKNS0_6StringERKNS_7MessageE@Base 1.2.1
  _ZN7testing8internal17GetCapturedStderrEv@Base 1.2.1
+ _ZN7testing8internal17Int32FromEnvOrDieEPKci@Base 1.2.1
  _ZN7testing8internal17Int32FromGTestEnvEPKci@Base 1.2.1
  _ZN7testing8internal17StrStreamToStringEPSt18basic_stringstreamIcSt11char_traitsIcESaIcEE@Base 1.2.1
  _ZN7testing8internal17g_executable_pathE@Base 1.2.1
@@ -262,6 +275,7 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZN7testing8internal18OsStackTraceGetter19kElidedFramesMarkerE@Base 1.2.1
  _ZN7testing8internal18OsStackTraceGetterD0Ev@Base 1.2.1
  _ZN7testing8internal18OsStackTraceGetterD1Ev@Base 1.2.1
+ _ZN7testing8internal18ParseNaturalNumberIiEEbRKSsPT_@Base 1.2.1
  _ZN7testing8internal18StreamableToStringIPcEENS0_6StringERKT_@Base 1.2.1
  _ZN7testing8internal18StreamableToStringIPwEENS0_6StringERKT_@Base 1.2.1
  _ZN7testing8internal18StreamableToStringIxEENS0_6StringERKT_@Base 1.2.1
@@ -271,10 +285,12 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZN7testing8internal19TypedTestCasePState25VerifyRegisteredTestNamesEPKciS3_@Base 1.2.1
  _ZN7testing8internal20DoubleNearPredFormatEPKcS2_S2_ddd@Base 1.2.1
  _ZN7testing8internal20ExitedUnsuccessfullyEi@Base 1.2.1
+ _ZN7testing8internal20ShouldRunTestOnShardEiii@Base 1.2.1
  _ZN7testing8internal20SingleFailureCheckerC1EPKNS_19TestPartResultArrayENS_18TestPartResultTypeEPKc@Base 1.2.1
  _ZN7testing8internal20SingleFailureCheckerC2EPKNS_19TestPartResultArrayENS_18TestPartResultTypeEPKc@Base 1.2.1
  _ZN7testing8internal20SingleFailureCheckerD1Ev@Base 1.2.1
  _ZN7testing8internal20SingleFailureCheckerD2Ev@Base 1.2.1
+ _ZN7testing8internal21StackLowerThanAddressEPKv@Base 1.2.1
  _ZN7testing8internal23DefaultDeathTestFactory6CreateEPKcPKNS0_2REES3_iPPNS0_9DeathTestE@Base 1.2.1
  _ZN7testing8internal23DefaultDeathTestFactoryD0Ev@Base 1.2.1
  _ZN7testing8internal23DefaultDeathTestFactoryD1Ev@Base 1.2.1
@@ -291,6 +307,7 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZN7testing8internal24HasNewFatalFailureHelperD2Ev@Base 1.2.1
  _ZN7testing8internal24ParseGoogleTestFlagsOnlyEPiPPc@Base 1.2.1
  _ZN7testing8internal24ParseGoogleTestFlagsOnlyEPiPPw@Base 1.2.1
+ _ZN7testing8internal25GetLastSystemErrorMessageEv@Base 1.2.1
  _ZN7testing8internal25ReportInvalidTestCaseTypeEPKcS2_i@Base 1.2.1
  _ZN7testing8internal27FormatTimeInMillisAsSecondsEx@Base 1.2.1
  _ZN7testing8internal27OsStackTraceGetterInterfaceD0Ev@Base 1.2.1
@@ -304,6 +321,7 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZN7testing8internal2RE9FullMatchEPKcRKS1_@Base 1.2.1
  _ZN7testing8internal2RED1Ev@Base 1.2.1
  _ZN7testing8internal2RED2Ev@Base 1.2.1
+ _ZN7testing8internal30WriteToShardStatusFileIfNeededEv@Base 1.2.1
  _ZN7testing8internal31GetCurrentOsStackTraceExceptTopEPNS_8UnitTestEi@Base 1.2.1
  _ZN7testing8internal35DefaultGlobalTestPartResultReporter20ReportTestPartResultERKNS_14TestPartResultE@Base 1.2.1
  _ZN7testing8internal35DefaultGlobalTestPartResultReporterC1EPNS0_12UnitTestImplE@Base 1.2.1
@@ -346,6 +364,7 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZN7testing8internal6StringD1Ev@Base 1.2.1
  _ZN7testing8internal6StringaSEPKc@Base 1.2.1
  _ZN7testing8internal7g_argvsE@Base 1.2.1
+ _ZN7testing8internal8FilePath11ConcatPathsERKS1_S3_@Base 1.2.1
  _ZN7testing8internal8FilePath12MakeFileNameERKS1_S3_iPKc@Base 1.2.1
  _ZN7testing8internal8FilePath13GetCurrentDirEv@Base 1.2.1
  _ZN7testing8internal8FilePath22GenerateUniqueFileNameERKS1_S3_PKc@Base 1.2.1
@@ -355,6 +374,8 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZN7testing8internal9Arguments11AddArgumentEPKc@Base 1.2.1
  _ZN7testing8internal9ArgumentsD1Ev@Base 1.2.1
  _ZN7testing8internal9DeathTest11LastMessageEv@Base 1.2.1
+ _ZN7testing8internal9DeathTest24last_death_test_message_E@Base 1.2.1
+ _ZN7testing8internal9DeathTest27set_last_death_test_messageERKNS0_6StringE@Base 1.2.1
  _ZN7testing8internal9DeathTest6CreateEPKcPKNS0_2REES3_iPPS1_@Base 1.2.1
  _ZN7testing8internal9DeathTestC1Ev@Base 1.2.1
  _ZN7testing8internal9DeathTestC2Ev@Base 1.2.1
@@ -366,6 +387,7 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZNK7testing14KilledBySignalclEi@Base 1.2.1
  _ZNK7testing19TestPartResultArray17GetTestPartResultEi@Base 1.2.1
  _ZNK7testing19TestPartResultArray4sizeEv@Base 1.2.1
+ _ZNK7testing7Message9GetStringEv@Base 1.2.1
  _ZNK7testing8TestCase16total_test_countEv@Base 1.2.1
  _ZNK7testing8TestCase17failed_test_countEv@Base 1.2.1
  _ZNK7testing8TestCase17test_to_run_countEv@Base 1.2.1
@@ -399,6 +421,7 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZNK7testing8internal6String8EndsWithEPKc@Base 1.2.1
  _ZNK7testing8internal8FilePath11IsDirectoryEv@Base 1.2.1
  _ZNK7testing8internal8FilePath12CreateFolderEv@Base 1.2.1
+ _ZNK7testing8internal8FilePath14IsAbsolutePathEv@Base 1.2.1
  _ZNK7testing8internal8FilePath14RemoveFileNameEv@Base 1.2.1
  _ZNK7testing8internal8FilePath15DirectoryExistsEv@Base 1.2.1
  _ZNK7testing8internal8FilePath15IsRootDirectoryEv@Base 1.2.1
@@ -421,6 +444,7 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZTIN7testing22UnitTestEventsRepeaterE@Base 1.2.1
  _ZTIN7testing24XmlUnitTestResultPrinterE@Base 1.2.1
  _ZTIN7testing25NullUnitTestResultPrinterE@Base 1.2.1
+ _ZTIN7testing26GoogleTestFailureExceptionE@Base 1.2.1
  _ZTIN7testing27PrettyUnitTestResultPrinterE@Base 1.2.1
  _ZTIN7testing30UnitTestEventListenerInterfaceE@Base 1.2.1
  _ZTIN7testing31TestPartResultReporterInterfaceE@Base 1.2.1
@@ -429,6 +453,7 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZTIN7testing8TestCaseE@Base 1.2.1
  _ZTIN7testing8UnitTestE@Base 1.2.1
  _ZTIN7testing8internal12UnitTestImplE@Base 1.2.1
+ _ZTIN7testing8internal13DeathTestImplE@Base 1.2.1
  _ZTIN7testing8internal13ExecDeathTestE@Base 1.2.1
  _ZTIN7testing8internal15NoExecDeathTestE@Base 1.2.1
  _ZTIN7testing8internal16DeathTestFactoryE@Base 1.2.1
@@ -450,6 +475,7 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZTSN7testing22UnitTestEventsRepeaterE@Base 1.2.1
  _ZTSN7testing24XmlUnitTestResultPrinterE@Base 1.2.1
  _ZTSN7testing25NullUnitTestResultPrinterE@Base 1.2.1
+ _ZTSN7testing26GoogleTestFailureExceptionE@Base 1.2.1
  _ZTSN7testing27PrettyUnitTestResultPrinterE@Base 1.2.1
  _ZTSN7testing30UnitTestEventListenerInterfaceE@Base 1.2.1
  _ZTSN7testing31TestPartResultReporterInterfaceE@Base 1.2.1
@@ -458,6 +484,7 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZTSN7testing8TestCaseE@Base 1.2.1
  _ZTSN7testing8UnitTestE@Base 1.2.1
  _ZTSN7testing8internal12UnitTestImplE@Base 1.2.1
+ _ZTSN7testing8internal13DeathTestImplE@Base 1.2.1
  _ZTSN7testing8internal13ExecDeathTestE@Base 1.2.1
  _ZTSN7testing8internal15NoExecDeathTestE@Base 1.2.1
  _ZTSN7testing8internal16DeathTestFactoryE@Base 1.2.1
@@ -479,6 +506,7 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZTVN7testing22UnitTestEventsRepeaterE@Base 1.2.1
  _ZTVN7testing24XmlUnitTestResultPrinterE@Base 1.2.1
  _ZTVN7testing25NullUnitTestResultPrinterE@Base 1.2.1
+ _ZTVN7testing26GoogleTestFailureExceptionE@Base 1.2.1
  _ZTVN7testing27PrettyUnitTestResultPrinterE@Base 1.2.1
  _ZTVN7testing30UnitTestEventListenerInterfaceE@Base 1.2.1
  _ZTVN7testing31TestPartResultReporterInterfaceE@Base 1.2.1
@@ -487,6 +515,7 @@ libgtest.so.0 libgtest0 #MINVER#
  _ZTVN7testing8TestCaseE@Base 1.2.1
  _ZTVN7testing8UnitTestE@Base 1.2.1
  _ZTVN7testing8internal12UnitTestImplE@Base 1.2.1
+ _ZTVN7testing8internal13DeathTestImplE@Base 1.2.1
  _ZTVN7testing8internal13ExecDeathTestE@Base 1.2.1
  _ZTVN7testing8internal15NoExecDeathTestE@Base 1.2.1
  _ZTVN7testing8internal16DeathTestFactoryE@Base 1.2.1
