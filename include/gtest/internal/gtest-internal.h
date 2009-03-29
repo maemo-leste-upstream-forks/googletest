@@ -39,7 +39,7 @@
 
 #include <gtest/internal/gtest-port.h>
 
-#ifdef GTEST_OS_LINUX
+#if GTEST_OS_LINUX
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -546,7 +546,7 @@ class TestFactoryImpl : public TestFactoryBase {
   virtual Test* CreateTest() { return new TestClass; }
 };
 
-#ifdef GTEST_OS_WINDOWS
+#if GTEST_OS_WINDOWS
 
 // Predicate-formatters for implementing the HRESULT checking macros
 // {ASSERT|EXPECT}_HRESULT_{SUCCEEDED|FAILED}
@@ -600,7 +600,7 @@ TestInfo* MakeAndRegisterTestInfo(
     TearDownTestCaseFunc tear_down_tc,
     TestFactoryBase* factory);
 
-#if defined(GTEST_HAS_TYPED_TEST) || defined(GTEST_HAS_TYPED_TEST_P)
+#if GTEST_HAS_TYPED_TEST || GTEST_HAS_TYPED_TEST_P
 
 // State of the definition of a type-parameterized test case.
 class TypedTestCasePState {
@@ -616,6 +616,7 @@ class TypedTestCasePState {
       fprintf(stderr, "%s Test %s must be defined before "
               "REGISTER_TYPED_TEST_CASE_P(%s, ...).\n",
               FormatFileLocation(file, line).c_str(), test_name, case_name);
+      fflush(stderr);
       abort();
     }
     defined_test_names_.insert(test_name);
@@ -748,6 +749,9 @@ String GetCurrentOsStackTraceExceptTop(UnitTest* unit_test, int skip_count);
 // Returns the number of failed test parts in the given test result object.
 int GetFailedPartCount(const TestResult* result);
 
+// A helper for suppressing warnings on unreachable code in some macros.
+bool AlwaysTrue();
+
 }  // namespace internal
 }  // namespace testing
 
@@ -764,12 +768,18 @@ int GetFailedPartCount(const TestResult* result);
 #define GTEST_SUCCESS_(message) \
   GTEST_MESSAGE_(message, ::testing::TPRT_SUCCESS)
 
+// Suppresses MSVC warnings 4072 (unreachable code) for the code following
+// statement if it returns or throws (or doesn't return or throw in some
+// situations).
+#define GTEST_HIDE_UNREACHABLE_CODE_(statement) \
+  if (::testing::internal::AlwaysTrue()) { statement; }
+
 #define GTEST_TEST_THROW_(statement, expected_exception, fail) \
   GTEST_AMBIGUOUS_ELSE_BLOCKER_ \
   if (const char* gtest_msg = "") { \
     bool gtest_caught_expected = false; \
     try { \
-      statement; \
+      GTEST_HIDE_UNREACHABLE_CODE_(statement); \
     } \
     catch (expected_exception const&) { \
       gtest_caught_expected = true; \
@@ -793,7 +803,7 @@ int GetFailedPartCount(const TestResult* result);
   GTEST_AMBIGUOUS_ELSE_BLOCKER_ \
   if (const char* gtest_msg = "") { \
     try { \
-      statement; \
+      GTEST_HIDE_UNREACHABLE_CODE_(statement); \
     } \
     catch (...) { \
       gtest_msg = "Expected: " #statement " doesn't throw an exception.\n" \
@@ -809,7 +819,7 @@ int GetFailedPartCount(const TestResult* result);
   if (const char* gtest_msg = "") { \
     bool gtest_caught_any = false; \
     try { \
-      statement; \
+      GTEST_HIDE_UNREACHABLE_CODE_(statement); \
     } \
     catch (...) { \
       gtest_caught_any = true; \
@@ -835,7 +845,7 @@ int GetFailedPartCount(const TestResult* result);
   GTEST_AMBIGUOUS_ELSE_BLOCKER_ \
   if (const char* gtest_msg = "") { \
     ::testing::internal::HasNewFatalFailureHelper gtest_fatal_failure_checker; \
-    { statement; } \
+    GTEST_HIDE_UNREACHABLE_CODE_(statement); \
     if (gtest_fatal_failure_checker.has_new_fatal_failure()) { \
       gtest_msg = "Expected: " #statement " doesn't generate new fatal " \
                   "failures in the current thread.\n" \

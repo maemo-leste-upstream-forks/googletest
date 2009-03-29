@@ -40,9 +40,9 @@
 // included, or there will be a compiler error.  This trick is to
 // prevent a user from accidentally including gtest-internal-inl.h in
 // his code.
-#define GTEST_IMPLEMENTATION
+#define GTEST_IMPLEMENTATION_ 1
 #include "src/gtest-internal-inl.h"
-#undef GTEST_IMPLEMENTATION
+#undef GTEST_IMPLEMENTATION_
 
 #include <stdlib.h>
 
@@ -50,7 +50,7 @@
 #include <pthread.h>
 #endif  // GTEST_HAS_PTHREAD
 
-#ifdef GTEST_OS_LINUX
+#if GTEST_OS_LINUX
 #include <string.h>
 #include <signal.h>
 #include <string>
@@ -59,6 +59,8 @@
 
 using testing::ScopedFakeTestPartResultReporter;
 using testing::TestPartResultArray;
+
+using testing::internal::String;
 
 // Tests catching fatal failures.
 
@@ -81,6 +83,12 @@ void TryTestSubroutine() {
 
   // If we get here, something is wrong.
   FAIL() << "This should never be reached.";
+}
+
+TEST(PassingTest, PassingTest1) {
+}
+
+TEST(PassingTest, PassingTest2) {
 }
 
 // Tests catching a fatal failure in a subroutine.
@@ -212,6 +220,14 @@ TEST(SCOPED_TRACETest, CanBeRepeated) {
                 << "trace point A, B, and D.";
 }
 
+TEST(DisabledTestsWarningTest,
+     DISABLED_AlsoRunDisabledTestsFlagSuppressesWarning) {
+  // This test body is intentionally empty.  Its sole purpose is for
+  // verifying that the --gtest_also_run_disabled_tests flag
+  // suppresses the "YOU HAVE 12 DISABLED TESTS" warning at the end of
+  // the test output.
+}
+
 // Tests using assertions outside of TEST and TEST_F.
 //
 // This function creates two failures intentionally.
@@ -339,7 +355,7 @@ TEST_F(FatalFailureInSetUpTest, FailureInSetUp) {
          << "We should never get here, as SetUp() failed.";
 }
 
-#ifdef GTEST_OS_WINDOWS
+#if GTEST_OS_WINDOWS
 
 // This group of tests verifies that Google Test handles SEH and C++
 // exceptions correctly.
@@ -706,7 +722,7 @@ TEST(ExpectFatalFailureTest, FailsWhenStatementThrows) {
 #endif  // GTEST_HAS_EXCEPTIONS
 
 // This #ifdef block tests the output of typed tests.
-#ifdef GTEST_HAS_TYPED_TEST
+#if GTEST_HAS_TYPED_TEST
 
 template <typename T>
 class TypedTest : public testing::Test {
@@ -725,7 +741,7 @@ TYPED_TEST(TypedTest, Failure) {
 #endif  // GTEST_HAS_TYPED_TEST
 
 // This #ifdef block tests the output of type-parameterized tests.
-#ifdef GTEST_HAS_TYPED_TEST_P
+#if GTEST_HAS_TYPED_TEST_P
 
 template <typename T>
 class TypedTestP : public testing::Test {
@@ -748,7 +764,7 @@ INSTANTIATE_TYPED_TEST_CASE_P(Unsigned, TypedTestP, UnsignedTypes);
 
 #endif  // GTEST_HAS_TYPED_TEST_P
 
-#ifdef GTEST_HAS_DEATH_TEST
+#if GTEST_HAS_DEATH_TEST
 
 // We rely on the golden file to verify that tests whose test case
 // name ends with DeathTest are run first.
@@ -756,7 +772,7 @@ INSTANTIATE_TYPED_TEST_CASE_P(Unsigned, TypedTestP, UnsignedTypes);
 TEST(ADeathTest, ShouldRunFirst) {
 }
 
-#ifdef GTEST_HAS_TYPED_TEST
+#if GTEST_HAS_TYPED_TEST
 
 // We rely on the golden file to verify that typed tests whose test
 // case name ends with DeathTest are run first.
@@ -773,7 +789,7 @@ TYPED_TEST(ATypedDeathTest, ShouldRunFirst) {
 
 #endif  // GTEST_HAS_TYPED_TEST
 
-#ifdef GTEST_HAS_TYPED_TEST_P
+#if GTEST_HAS_TYPED_TEST_P
 
 
 // We rely on the golden file to verify that type-parameterized tests
@@ -950,6 +966,10 @@ class BarEnvironment : public testing::Environment {
   }
 };
 
+GTEST_DEFINE_bool_(internal_skip_environment_and_ad_hoc_tests, false,
+                   "This flag causes the program to skip test environment "
+                   "tests and ad hoc tests.");
+
 // The main function.
 //
 // The idea is to use Google Test to run all the tests we have defined (some
@@ -960,15 +980,32 @@ int main(int argc, char **argv) {
   // We will use a separate Python script to compare the output of
   // this program with the golden file.
   testing::InitGoogleTest(&argc, argv);
+  if (argc >= 2 &&
+      String(argv[1]) == "--gtest_internal_skip_environment_and_ad_hoc_tests")
+    GTEST_FLAG(internal_skip_environment_and_ad_hoc_tests) = true;
 
-#ifdef GTEST_HAS_DEATH_TEST
+#if GTEST_HAS_DEATH_TEST
   if (testing::internal::GTEST_FLAG(internal_run_death_test) != "") {
     // Skip the usual output capturing if we're running as the child
     // process of an threadsafe-style death test.
+#if GTEST_OS_WINDOWS
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable:4996)
+#endif  // _MSC_VER
+    freopen("nul:", "w", stdout);
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif  // _MSC_VER
+#else
     freopen("/dev/null", "w", stdout);
+#endif  // GTEST_OS_WINDOWS
     return RUN_ALL_TESTS();
   }
 #endif  // GTEST_HAS_DEATH_TEST
+
+  if (GTEST_FLAG(internal_skip_environment_and_ad_hoc_tests))
+    return RUN_ALL_TESTS();
 
   // Registers two global test environments.
   // The golden file verifies that they are set up in the order they

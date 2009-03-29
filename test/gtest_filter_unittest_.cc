@@ -67,6 +67,13 @@ TEST(BarTest, TestTwo) {
 TEST(BarTest, TestThree) {
 }
 
+TEST(BarTest, DISABLED_TestFour) {
+  FAIL() << "Expected failure.";
+}
+
+TEST(BarTest, DISABLED_TestFive) {
+  FAIL() << "Expected failure.";
+}
 
 // Test case BazTest.
 
@@ -80,7 +87,46 @@ TEST(BazTest, TestA) {
 TEST(BazTest, TestB) {
 }
 
-#ifdef GTEST_HAS_PARAM_TEST
+TEST(BazTest, DISABLED_TestC) {
+  FAIL() << "Expected failure.";
+}
+
+// Test case HasDeathTest
+
+TEST(HasDeathTest, Test1) {
+#if GTEST_HAS_DEATH_TEST
+  EXPECT_DEATH({exit(1);},
+    ".*");
+#endif  // GTEST_HAS_DEATH_TEST
+}
+
+// We need at least two death tests to make sure that the all death tests
+// aren't on the first shard.
+TEST(HasDeathTest, Test2) {
+#if GTEST_HAS_DEATH_TEST
+  EXPECT_DEATH({exit(1);},
+    ".*");
+#endif  // GTEST_HAS_DEATH_TEST
+}
+
+
+// Test case FoobarTest
+
+TEST(DISABLED_FoobarTest, Test1) {
+  FAIL() << "Expected failure.";
+}
+
+TEST(DISABLED_FoobarTest, DISABLED_Test2) {
+  FAIL() << "Expected failure.";
+}
+
+// Test case FoobarbazTest
+
+TEST(DISABLED_FoobarbazTest, TestA) {
+  FAIL() << "Expected failure.";
+}
+
+#if GTEST_HAS_PARAM_TEST
 class ParamTest : public testing::TestWithParam<int> {
 };
 

@@ -11,8 +11,10 @@ EXTRA_DIST = \
   include/gtest/internal/gtest-param-util-generated.h.pump \
   make/Makefile \
   scons/SConscript \
+  scripts/fuse_gtest_files.py \
   scripts/gen_gtest_pred_impl.py \
-  src/gtest-all.cc
+  scripts/test/Makefile \
+  test/gtest_all_test.cc
 
 # MSVC project files
 EXTRA_DIST += \
@@ -261,6 +263,13 @@ check_PROGRAMS += test/gtest-test-part_test
 test_gtest_test_part_test_SOURCES = test/gtest-test-part_test.cc
 test_gtest_test_part_test_LDADD = lib/libgtest_main.la
 
+TESTS += test/gtest_throw_on_failure_ex_test
+check_PROGRAMS += test/gtest_throw_on_failure_ex_test
+test_gtest_throw_on_failure_ex_test_SOURCES = \
+    test/gtest_throw_on_failure_ex_test.cc \
+    src/gtest-all.cc
+test_gtest_throw_on_failure_ex_test_CXXFLAGS = $(AM_CXXFLAGS) -fexceptions
+
 TESTS += test/gtest-typed-test_test
 check_PROGRAMS += test/gtest-typed-test_test
 test_gtest_typed_test_test_SOURCES = test/gtest-typed-test_test.cc \
@@ -271,7 +280,7 @@ test_gtest_typed_test_test_LDADD = lib/libgtest_main.la
 TESTS += test/gtest_unittest
 check_PROGRAMS += test/gtest_unittest
 test_gtest_unittest_SOURCES = test/gtest_unittest.cc
-test_gtest_unittest_LDADD = lib/libgtest.la
+test_gtest_unittest_LDADD = lib/libgtest_main.la
 
 # The following tests depend on the presence of a Python installation and are
 # keyed off of it. TODO(chandlerc@google.com): While we currently only attempt
@@ -311,6 +320,12 @@ test_gtest_filter_unittest__LDADD = lib/libgtest.la
 check_SCRIPTS += test/gtest_filter_unittest.py
 TESTS += test/gtest_filter_unittest.py
 
+check_PROGRAMS += test/gtest_help_test_
+test_gtest_help_test__SOURCES = test/gtest_help_test_.cc
+test_gtest_help_test__LDADD = lib/libgtest_main.la
+check_SCRIPTS += test/gtest_help_test.py
+TESTS += test/gtest_help_test.py
+
 check_PROGRAMS += test/gtest_list_tests_unittest_
 test_gtest_list_tests_unittest__SOURCES = test/gtest_list_tests_unittest_.cc
 test_gtest_list_tests_unittest__LDADD = lib/libgtest.la
@@ -324,6 +339,14 @@ check_SCRIPTS += test/gtest_output_test.py
 EXTRA_DIST += test/gtest_output_test_golden_lin.txt \
               test/gtest_output_test_golden_win.txt
 TESTS += test/gtest_output_test.py
+
+check_PROGRAMS += test/gtest_throw_on_failure_test_
+test_gtest_throw_on_failure_test__SOURCES = \
+  test/gtest_throw_on_failure_test_.cc \
+  src/gtest-all.cc
+test_gtest_throw_on_failure_test__CXXFLAGS = $(AM_CXXFLAGS) -fno-exceptions
+check_SCRIPTS += test/gtest_throw_on_failure_test.py
+TESTS += test/gtest_throw_on_failure_test.py
 
 check_PROGRAMS += test/gtest_uninitialized_test_
 test_gtest_uninitialized_test__SOURCES = test/gtest_uninitialized_test_.cc

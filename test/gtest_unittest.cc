@@ -33,6 +33,26 @@
 // Google Test work.
 
 #include <gtest/gtest.h>
+
+// Verifies that the command line flag variables can be accessed
+// in code once <gtest/gtest.h> has been #included.
+// Do not move it after other #includes.
+TEST(CommandLineFlagsTest, CanBeAccessedInCodeOnceGTestHIsIncluded) {
+  bool dummy = testing::GTEST_FLAG(also_run_disabled_tests)
+      || testing::GTEST_FLAG(break_on_failure)
+      || testing::GTEST_FLAG(catch_exceptions)
+      || testing::GTEST_FLAG(color) != "unknown"
+      || testing::GTEST_FLAG(filter) != "unknown"
+      || testing::GTEST_FLAG(list_tests)
+      || testing::GTEST_FLAG(output) != "unknown"
+      || testing::GTEST_FLAG(print_time)
+      || testing::GTEST_FLAG(repeat) > 0
+      || testing::GTEST_FLAG(show_internal_stack_frames)
+      || testing::GTEST_FLAG(stack_trace_depth) > 0
+      || testing::GTEST_FLAG(throw_on_failure);
+  EXPECT_TRUE(dummy || !dummy);  // Suppresses warning that dummy is unused.
+}
+
 #include <gtest/gtest-spi.h>
 
 // Indicates that this translation unit is part of Google Test's
@@ -40,9 +60,9 @@
 // included, or there will be a compiler error.  This trick is to
 // prevent a user from accidentally including gtest-internal-inl.h in
 // his code.
-#define GTEST_IMPLEMENTATION
+#define GTEST_IMPLEMENTATION_ 1
 #include "src/gtest-internal-inl.h"
-#undef GTEST_IMPLEMENTATION
+#undef GTEST_IMPLEMENTATION_
 
 #include <stdlib.h>
 
@@ -50,7 +70,7 @@
 #include <pthread.h>
 #endif  // GTEST_HAS_PTHREAD
 
-#ifdef GTEST_OS_LINUX
+#if GTEST_OS_LINUX
 #include <string.h>
 #include <signal.h>
 #include <sys/stat.h>
@@ -84,8 +104,10 @@ using testing::AssertionResult;
 using testing::AssertionSuccess;
 using testing::DoubleLE;
 using testing::FloatLE;
+using testing::GTEST_FLAG(also_run_disabled_tests);
 using testing::GTEST_FLAG(break_on_failure);
 using testing::GTEST_FLAG(catch_exceptions);
+using testing::GTEST_FLAG(death_test_use_fork);
 using testing::GTEST_FLAG(color);
 using testing::GTEST_FLAG(filter);
 using testing::GTEST_FLAG(list_tests);
@@ -94,10 +116,12 @@ using testing::GTEST_FLAG(print_time);
 using testing::GTEST_FLAG(repeat);
 using testing::GTEST_FLAG(show_internal_stack_frames);
 using testing::GTEST_FLAG(stack_trace_depth);
+using testing::GTEST_FLAG(throw_on_failure);
 using testing::IsNotSubstring;
 using testing::IsSubstring;
 using testing::Message;
 using testing::ScopedFakeTestPartResultReporter;
+using testing::StaticAssertTypeEq;
 using testing::Test;
 using testing::TestPartResult;
 using testing::TestPartResultArray;
@@ -116,7 +140,10 @@ using testing::internal::GetTestTypeId;
 using testing::internal::GetTypeId;
 using testing::internal::GTestFlagSaver;
 using testing::internal::Int32;
+using testing::internal::Int32FromEnvOrDie;
 using testing::internal::List;
+using testing::internal::ShouldRunTestOnShard;
+using testing::internal::ShouldShard;
 using testing::internal::ShouldUseColor;
 using testing::internal::StreamableToString;
 using testing::internal::String;
@@ -176,7 +203,7 @@ TEST(FormatTimeInMillisAsSecondsTest, FormatsNegativeNumber) {
   EXPECT_STREQ("-3", FormatTimeInMillisAsSeconds(-3000));
 }
 
-#ifndef GTEST_OS_SYMBIAN
+#if !GTEST_OS_SYMBIAN
 // NULL testing does not work with Symbian compilers.
 
 // Tests that GTEST_IS_NULL_LITERAL_(x) is true when x is a null
@@ -200,7 +227,7 @@ TEST(NullLiteralTest, IsFalseForNonNullLiterals) {
   EXPECT_FALSE(GTEST_IS_NULL_LITERAL_(static_cast<void*>(NULL)));
 }
 
-#endif  // GTEST_OS_SYMBIAN
+#endif  // !GTEST_OS_SYMBIAN
 //
 // Tests CodePointToUtf8().
 
@@ -241,7 +268,7 @@ TEST(CodePointToUtf8Test, CanEncode12To16Bits) {
   EXPECT_STREQ("\xEC\x9D\x8D", CodePointToUtf8(L'\xC74D', buffer));
 }
 
-#ifndef GTEST_WIDE_STRING_USES_UTF16_
+#if !GTEST_WIDE_STRING_USES_UTF16_
 // Tests in this group require a wchar_t to hold > 16 bits, and thus
 // are skipped on Windows, Cygwin, and Symbian, where a wchar_t is
 // 16-bit wide. This code may not compile on those systems.
@@ -267,7 +294,7 @@ TEST(CodePointToUtf8Test, CanEncodeInvalidCodePoint) {
                CodePointToUtf8(L'\x1234ABCD', buffer));
 }
 
-#endif  // GTEST_WIDE_STRING_USES_UTF16_
+#endif  // !GTEST_WIDE_STRING_USES_UTF16_
 
 // Tests WideStringToUtf8().
 
@@ -321,7 +348,7 @@ TEST(WideStringToUtf8Test, StopsWhenLengthLimitReached) {
 }
 
 
-#ifndef GTEST_WIDE_STRING_USES_UTF16_
+#if !GTEST_WIDE_STRING_USES_UTF16_
 // Tests that Unicode code-points that have 17 to 21 bits are encoded
 // as 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx. This code may not compile
 // on the systems using UTF-16 encoding.
@@ -340,7 +367,7 @@ TEST(WideStringToUtf8Test, CanEncodeInvalidCodePoint) {
   EXPECT_STREQ("(Invalid Unicode 0xABCDFF)",
                WideStringToUtf8(L"\xABCDFF", -1).c_str());
 }
-#else
+#else  // !GTEST_WIDE_STRING_USES_UTF16_
 // Tests that surrogate pairs are encoded correctly on the systems using
 // UTF-16 encoding in the wide strings.
 TEST(WideStringToUtf8Test, CanEncodeValidUtf16SUrrogatePairs) {
@@ -358,10 +385,10 @@ TEST(WideStringToUtf8Test, CanEncodeInvalidUtf16SurrogatePair) {
   // Trailing surrogate appearas without a leading surrogate.
   EXPECT_STREQ("\xED\xB0\x80PQR", WideStringToUtf8(L"\xDC00PQR", -1).c_str());
 }
-#endif  // GTEST_WIDE_STRING_USES_UTF16_
+#endif  // !GTEST_WIDE_STRING_USES_UTF16_
 
 // Tests that codepoint concatenation works correctly.
-#ifndef GTEST_WIDE_STRING_USES_UTF16_
+#if !GTEST_WIDE_STRING_USES_UTF16_
 TEST(WideStringToUtf8Test, ConcatenatesCodepointsCorrectly) {
   EXPECT_STREQ(
       "\xF4\x88\x98\xB4"
@@ -378,7 +405,7 @@ TEST(WideStringToUtf8Test, ConcatenatesCodepointsCorrectly) {
       "\xEC\x9D\x8D" "\n" "\xD5\xB6" "\xE0\xA3\x93",
       WideStringToUtf8(L"\xC74D\n\x576\x8D3", -1).c_str());
 }
-#endif  // GTEST_WIDE_STRING_USES_UTF16_
+#endif  // !GTEST_WIDE_STRING_USES_UTF16_
 
 // Tests the List template class.
 
@@ -700,7 +727,7 @@ TEST(StringTest, CanBeAssignedSelf) {
   EXPECT_STREQ("hello", dest.c_str());
 }
 
-#ifdef GTEST_OS_WINDOWS
+#if GTEST_OS_WINDOWS
 
 // Tests String::ShowWideCString().
 TEST(StringTest, ShowWideCString) {
@@ -847,37 +874,58 @@ TEST_F(ScopedFakeTestPartResultReporterWithThreadsTest,
 
 #endif  // GTEST_IS_THREADSAFE && GTEST_HAS_PTHREAD
 
-// Tests EXPECT_{,NON}FATAL_FAILURE{,ON_ALL_THREADS}.
+// Tests EXPECT_FATAL_FAILURE{,ON_ALL_THREADS}.
 
-typedef ScopedFakeTestPartResultReporterTest ExpectFailureTest;
+typedef ScopedFakeTestPartResultReporterTest ExpectFatalFailureTest;
 
-TEST_F(ExpectFailureTest, ExpectFatalFaliure) {
+TEST_F(ExpectFatalFailureTest, CatchesFatalFaliure) {
   EXPECT_FATAL_FAILURE(AddFailure(FATAL_FAILURE), "Expected fatal failure.");
 }
 
-TEST_F(ExpectFailureTest, ExpectNonFatalFailure) {
-  EXPECT_NONFATAL_FAILURE(AddFailure(NONFATAL_FAILURE),
-                          "Expected non-fatal failure.");
-}
-
-TEST_F(ExpectFailureTest, ExpectFatalFailureOnAllThreads) {
+TEST_F(ExpectFatalFailureTest, CatchesFatalFailureOnAllThreads) {
+  // We have another test below to verify that the macro catches fatal
+  // failures generated on another thread.
   EXPECT_FATAL_FAILURE_ON_ALL_THREADS(AddFailure(FATAL_FAILURE),
                                       "Expected fatal failure.");
 }
 
-TEST_F(ExpectFailureTest, ExpectNonFatalFailureOnAllThreads) {
-  EXPECT_NONFATAL_FAILURE_ON_ALL_THREADS(AddFailure(NONFATAL_FAILURE),
-                                         "Expected non-fatal failure.");
+// Tests that EXPECT_FATAL_FAILURE() can be used in a non-void
+// function even when the statement in it contains ASSERT_*.
+
+int NonVoidFunction() {
+  EXPECT_FATAL_FAILURE(ASSERT_TRUE(false), "");
+  EXPECT_FATAL_FAILURE_ON_ALL_THREADS(FAIL(), "");
+  return 0;
 }
 
-// Tests that the EXPECT_{,NON}FATAL_FAILURE{,_ON_ALL_THREADS} accepts
-// a statement that contains a macro which expands to code containing
-// an unprotected comma.
+TEST_F(ExpectFatalFailureTest, CanBeUsedInNonVoidFunction) {
+  NonVoidFunction();
+}
+
+// Tests that EXPECT_FATAL_FAILURE(statement, ...) doesn't abort the
+// current function even though 'statement' generates a fatal failure.
+
+void DoesNotAbortHelper(bool* aborted) {
+  EXPECT_FATAL_FAILURE(ASSERT_TRUE(false), "");
+  EXPECT_FATAL_FAILURE_ON_ALL_THREADS(FAIL(), "");
+
+  *aborted = false;
+}
+
+TEST_F(ExpectFatalFailureTest, DoesNotAbort) {
+  bool aborted = true;
+  DoesNotAbortHelper(&aborted);
+  EXPECT_FALSE(aborted);
+}
+
+// Tests that the EXPECT_FATAL_FAILURE{,_ON_ALL_THREADS} accepts a
+// statement that contains a macro which expands to code containing an
+// unprotected comma.
 
 static int global_var = 0;
 #define GTEST_USE_UNPROTECTED_COMMA_ global_var++, global_var++
 
-TEST_F(ExpectFailureTest, AcceptsMacroThatExpandsToUnprotectedComma) {
+TEST_F(ExpectFatalFailureTest, AcceptsMacroThatExpandsToUnprotectedComma) {
   EXPECT_FATAL_FAILURE({
     GTEST_USE_UNPROTECTED_COMMA_;
     AddFailure(FATAL_FAILURE);
@@ -887,7 +935,28 @@ TEST_F(ExpectFailureTest, AcceptsMacroThatExpandsToUnprotectedComma) {
     GTEST_USE_UNPROTECTED_COMMA_;
     AddFailure(FATAL_FAILURE);
   }, "");
+}
 
+// Tests EXPECT_NONFATAL_FAILURE{,ON_ALL_THREADS}.
+
+typedef ScopedFakeTestPartResultReporterTest ExpectNonfatalFailureTest;
+
+TEST_F(ExpectNonfatalFailureTest, CatchesNonfatalFailure) {
+  EXPECT_NONFATAL_FAILURE(AddFailure(NONFATAL_FAILURE),
+                          "Expected non-fatal failure.");
+}
+
+TEST_F(ExpectNonfatalFailureTest, CatchesNonfatalFailureOnAllThreads) {
+  // We have another test below to verify that the macro catches
+  // non-fatal failures generated on another thread.
+  EXPECT_NONFATAL_FAILURE_ON_ALL_THREADS(AddFailure(NONFATAL_FAILURE),
+                                         "Expected non-fatal failure.");
+}
+
+// Tests that the EXPECT_NONFATAL_FAILURE{,_ON_ALL_THREADS} accepts a
+// statement that contains a macro which expands to code containing an
+// unprotected comma.
+TEST_F(ExpectNonfatalFailureTest, AcceptsMacroThatExpandsToUnprotectedComma) {
   EXPECT_NONFATAL_FAILURE({
     GTEST_USE_UNPROTECTED_COMMA_;
     AddFailure(NONFATAL_FAILURE);
@@ -1087,7 +1156,7 @@ TEST(TestResultPropertyTest, OverridesValuesForDuplicateKeys) {
 // property is not recorded.
 void ExpectNonFatalFailureRecordingPropertyWithReservedKey(const char* key) {
   TestResult test_result;
-  TestProperty property("name", "1");
+  TestProperty property(key, "1");
   EXPECT_NONFATAL_FAILURE(test_result.RecordProperty(property), "Reserved key");
   ASSERT_TRUE(test_result.test_properties().IsEmpty()) << "Not recorded";
 }
@@ -1126,14 +1195,17 @@ class GTestFlagSaverTest : public Test {
   static void SetUpTestCase() {
     saver_ = new GTestFlagSaver;
 
+    GTEST_FLAG(also_run_disabled_tests) = false;
     GTEST_FLAG(break_on_failure) = false;
     GTEST_FLAG(catch_exceptions) = false;
+    GTEST_FLAG(death_test_use_fork) = false;
     GTEST_FLAG(color) = "auto";
     GTEST_FLAG(filter) = "";
     GTEST_FLAG(list_tests) = false;
     GTEST_FLAG(output) = "";
     GTEST_FLAG(print_time) = false;
     GTEST_FLAG(repeat) = 1;
+    GTEST_FLAG(throw_on_failure) = false;
   }
 
   // Restores the Google Test flags that the tests have modified.  This will
@@ -1146,23 +1218,29 @@ class GTestFlagSaverTest : public Test {
   // Verifies that the Google Test flags have their default values, and then
   // modifies each of them.
   void VerifyAndModifyFlags() {
+    EXPECT_FALSE(GTEST_FLAG(also_run_disabled_tests));
     EXPECT_FALSE(GTEST_FLAG(break_on_failure));
     EXPECT_FALSE(GTEST_FLAG(catch_exceptions));
     EXPECT_STREQ("auto", GTEST_FLAG(color).c_str());
+    EXPECT_FALSE(GTEST_FLAG(death_test_use_fork));
     EXPECT_STREQ("", GTEST_FLAG(filter).c_str());
     EXPECT_FALSE(GTEST_FLAG(list_tests));
     EXPECT_STREQ("", GTEST_FLAG(output).c_str());
     EXPECT_FALSE(GTEST_FLAG(print_time));
     EXPECT_EQ(1, GTEST_FLAG(repeat));
+    EXPECT_FALSE(GTEST_FLAG(throw_on_failure));
 
+    GTEST_FLAG(also_run_disabled_tests) = true;
     GTEST_FLAG(break_on_failure) = true;
     GTEST_FLAG(catch_exceptions) = true;
     GTEST_FLAG(color) = "no";
+    GTEST_FLAG(death_test_use_fork) = true;
     GTEST_FLAG(filter) = "abc";
     GTEST_FLAG(list_tests) = true;
     GTEST_FLAG(output) = "xml:foo.xml";
     GTEST_FLAG(print_time) = true;
     GTEST_FLAG(repeat) = 100;
+    GTEST_FLAG(throw_on_failure) = true;
   }
  private:
   // For saving Google Test flags during this test case.
@@ -1192,7 +1270,7 @@ static void SetEnv(const char* name, const char* value) {
 #ifdef _WIN32_WCE
   // Environment variables are not supported on Windows CE.
   return;
-#elif defined(GTEST_OS_WINDOWS)  // If we are on Windows proper.
+#elif GTEST_OS_WINDOWS  // If we are on Windows proper.
   _putenv((Message() << name << "=" << value).GetString().c_str());
 #else
   if (*value == '\0') {
@@ -1213,7 +1291,7 @@ using testing::internal::Int32FromGTestEnv;
 // Tests that Int32FromGTestEnv() returns the default value when the
 // environment variable is not set.
 TEST(Int32FromGTestEnvTest, ReturnsDefaultWhenVariableIsNotSet) {
-  SetEnv(GTEST_FLAG_PREFIX_UPPER "TEMP", "");
+  SetEnv(GTEST_FLAG_PREFIX_UPPER_ "TEMP", "");
   EXPECT_EQ(10, Int32FromGTestEnv("temp", 10));
 }
 
@@ -1222,10 +1300,10 @@ TEST(Int32FromGTestEnvTest, ReturnsDefaultWhenVariableIsNotSet) {
 TEST(Int32FromGTestEnvTest, ReturnsDefaultWhenValueOverflows) {
   printf("(expecting 2 warnings)\n");
 
-  SetEnv(GTEST_FLAG_PREFIX_UPPER "TEMP", "12345678987654321");
+  SetEnv(GTEST_FLAG_PREFIX_UPPER_ "TEMP", "12345678987654321");
   EXPECT_EQ(20, Int32FromGTestEnv("temp", 20));
 
-  SetEnv(GTEST_FLAG_PREFIX_UPPER "TEMP", "-12345678987654321");
+  SetEnv(GTEST_FLAG_PREFIX_UPPER_ "TEMP", "-12345678987654321");
   EXPECT_EQ(30, Int32FromGTestEnv("temp", 30));
 }
 
@@ -1234,10 +1312,10 @@ TEST(Int32FromGTestEnvTest, ReturnsDefaultWhenValueOverflows) {
 TEST(Int32FromGTestEnvTest, ReturnsDefaultWhenValueIsInvalid) {
   printf("(expecting 2 warnings)\n");
 
-  SetEnv(GTEST_FLAG_PREFIX_UPPER "TEMP", "A1");
+  SetEnv(GTEST_FLAG_PREFIX_UPPER_ "TEMP", "A1");
   EXPECT_EQ(40, Int32FromGTestEnv("temp", 40));
 
-  SetEnv(GTEST_FLAG_PREFIX_UPPER "TEMP", "12X");
+  SetEnv(GTEST_FLAG_PREFIX_UPPER_ "TEMP", "12X");
   EXPECT_EQ(50, Int32FromGTestEnv("temp", 50));
 }
 
@@ -1245,10 +1323,10 @@ TEST(Int32FromGTestEnvTest, ReturnsDefaultWhenValueIsInvalid) {
 // environment variable when it represents a valid decimal integer in
 // the range of an Int32.
 TEST(Int32FromGTestEnvTest, ParsesAndReturnsValidValue) {
-  SetEnv(GTEST_FLAG_PREFIX_UPPER "TEMP", "123");
+  SetEnv(GTEST_FLAG_PREFIX_UPPER_ "TEMP", "123");
   EXPECT_EQ(123, Int32FromGTestEnv("temp", 0));
 
-  SetEnv(GTEST_FLAG_PREFIX_UPPER "TEMP", "-321");
+  SetEnv(GTEST_FLAG_PREFIX_UPPER_ "TEMP", "-321");
   EXPECT_EQ(-321, Int32FromGTestEnv("temp", 0));
 }
 #endif  // !defined(_WIN32_WCE)
@@ -1298,11 +1376,166 @@ TEST(ParseInt32FlagTest, ReturnsDefaultWhenValueIsInvalid) {
 // the range of an Int32.
 TEST(ParseInt32FlagTest, ParsesAndReturnsValidValue) {
   Int32 value = 123;
-  EXPECT_TRUE(ParseInt32Flag("--" GTEST_FLAG_PREFIX "abc=456", "abc", &value));
+  EXPECT_TRUE(ParseInt32Flag("--" GTEST_FLAG_PREFIX_ "abc=456", "abc", &value));
   EXPECT_EQ(456, value);
 
-  EXPECT_TRUE(ParseInt32Flag("--" GTEST_FLAG_PREFIX "abc=-789", "abc", &value));
+  EXPECT_TRUE(ParseInt32Flag("--" GTEST_FLAG_PREFIX_ "abc=-789", "abc", &value));
   EXPECT_EQ(-789, value);
+}
+
+// Tests that Int32FromEnvOrDie() parses the value of the var or
+// returns the correct default.
+TEST(Int32FromEnvOrDieTest, ParsesAndReturnsValidValue) {
+  EXPECT_EQ(333, Int32FromEnvOrDie(GTEST_FLAG_PREFIX_UPPER_ "UnsetVar", 333));
+  SetEnv(GTEST_FLAG_PREFIX_UPPER_ "UnsetVar", "123");
+  EXPECT_EQ(123, Int32FromEnvOrDie(GTEST_FLAG_PREFIX_UPPER_ "UnsetVar", 333));
+  SetEnv(GTEST_FLAG_PREFIX_UPPER_ "UnsetVar", "-123");
+  EXPECT_EQ(-123, Int32FromEnvOrDie(GTEST_FLAG_PREFIX_UPPER_ "UnsetVar", 333));
+}
+
+#if GTEST_HAS_DEATH_TEST
+
+// Tests that Int32FromEnvOrDie() aborts with an error message
+// if the variable is not an Int32.
+TEST(Int32FromEnvOrDieDeathTest, AbortsOnFailure) {
+  SetEnv(GTEST_FLAG_PREFIX_UPPER_ "VAR", "xxx");
+  EXPECT_DEATH({Int32FromEnvOrDie(GTEST_FLAG_PREFIX_UPPER_ "VAR", 123);},
+               ".*");
+}
+
+// Tests that Int32FromEnvOrDie() aborts with an error message
+// if the variable cannot be represnted by an Int32.
+TEST(Int32FromEnvOrDieDeathTest, AbortsOnInt32Overflow) {
+  SetEnv(GTEST_FLAG_PREFIX_UPPER_ "VAR", "1234567891234567891234");
+  EXPECT_DEATH({Int32FromEnvOrDie(GTEST_FLAG_PREFIX_UPPER_ "VAR", 123);},
+               ".*");
+}
+
+#endif  // GTEST_HAS_DEATH_TEST
+
+
+// Tests that ShouldRunTestOnShard() selects all tests
+// where there is 1 shard.
+TEST(ShouldRunTestOnShardTest, IsPartitionWhenThereIsOneShard) {
+  EXPECT_TRUE(ShouldRunTestOnShard(1, 0, 0));
+  EXPECT_TRUE(ShouldRunTestOnShard(1, 0, 1));
+  EXPECT_TRUE(ShouldRunTestOnShard(1, 0, 2));
+  EXPECT_TRUE(ShouldRunTestOnShard(1, 0, 3));
+  EXPECT_TRUE(ShouldRunTestOnShard(1, 0, 4));
+}
+
+class ShouldShardTest : public testing::Test {
+ protected:
+  virtual void SetUp() {
+    index_var_ = GTEST_FLAG_PREFIX_UPPER_ "INDEX";
+    total_var_ = GTEST_FLAG_PREFIX_UPPER_ "TOTAL";
+  }
+
+  virtual void TearDown() {
+    SetEnv(index_var_, "");
+    SetEnv(total_var_, "");
+  }
+
+  const char* index_var_;
+  const char* total_var_;
+};
+
+// Tests that sharding is disabled if neither of the environment variables
+// are set.
+TEST_F(ShouldShardTest, ReturnsFalseWhenNeitherEnvVarIsSet) {
+  SetEnv(index_var_, "");
+  SetEnv(total_var_, "");
+
+  EXPECT_FALSE(ShouldShard(total_var_, index_var_, false));
+  EXPECT_FALSE(ShouldShard(total_var_, index_var_, true));
+}
+
+// Tests that sharding is not enabled if total_shards  == 1.
+TEST_F(ShouldShardTest, ReturnsFalseWhenTotalShardIsOne) {
+  SetEnv(index_var_, "0");
+  SetEnv(total_var_, "1");
+  EXPECT_FALSE(ShouldShard(total_var_, index_var_, false));
+  EXPECT_FALSE(ShouldShard(total_var_, index_var_, true));
+}
+
+// Tests that sharding is enabled if total_shards > 1 and
+// we are not in a death test subprocess.
+TEST_F(ShouldShardTest, WorksWhenShardEnvVarsAreValid) {
+  SetEnv(index_var_, "4");
+  SetEnv(total_var_, "22");
+  EXPECT_TRUE(ShouldShard(total_var_, index_var_, false));
+  EXPECT_FALSE(ShouldShard(total_var_, index_var_, true));
+
+  SetEnv(index_var_, "8");
+  SetEnv(total_var_, "9");
+  EXPECT_TRUE(ShouldShard(total_var_, index_var_, false));
+  EXPECT_FALSE(ShouldShard(total_var_, index_var_, true));
+
+  SetEnv(index_var_, "0");
+  SetEnv(total_var_, "9");
+  EXPECT_TRUE(ShouldShard(total_var_, index_var_, false));
+  EXPECT_FALSE(ShouldShard(total_var_, index_var_, true));
+}
+
+#if GTEST_HAS_DEATH_TEST
+
+// Tests that we exit in error if the sharding values are not valid.
+TEST_F(ShouldShardTest, AbortsWhenShardingEnvVarsAreInvalid) {
+  SetEnv(index_var_, "4");
+  SetEnv(total_var_, "4");
+  EXPECT_DEATH({ShouldShard(total_var_, index_var_, false);},
+               ".*");
+
+  SetEnv(index_var_, "4");
+  SetEnv(total_var_, "-2");
+  EXPECT_DEATH({ShouldShard(total_var_, index_var_, false);},
+               ".*");
+
+  SetEnv(index_var_, "5");
+  SetEnv(total_var_, "");
+  EXPECT_DEATH({ShouldShard(total_var_, index_var_, false);},
+               ".*");
+
+  SetEnv(index_var_, "");
+  SetEnv(total_var_, "5");
+  EXPECT_DEATH({ShouldShard(total_var_, index_var_, false);},
+               ".*");
+}
+
+#endif  // GTEST_HAS_DEATH_TEST
+
+// Tests that ShouldRunTestOnShard is a partition when 5
+// shards are used.
+TEST(ShouldRunTestOnShardTest, IsPartitionWhenThereAreFiveShards) {
+  // Choose an arbitrary number of tests and shards.
+  const int num_tests = 17;
+  const int num_shards = 5;
+
+  // Check partitioning: each test should be on exactly 1 shard.
+  for (int test_id = 0; test_id < num_tests; test_id++) {
+    int prev_selected_shard_index = -1;
+    for (int shard_index = 0; shard_index < num_shards; shard_index++) {
+      if (ShouldRunTestOnShard(num_shards, shard_index, test_id)) {
+        if (prev_selected_shard_index < 0) {
+          prev_selected_shard_index = shard_index;
+        } else {
+          ADD_FAILURE() << "Shard " << prev_selected_shard_index << " and "
+            << shard_index << " are both selected to run test " << test_id;
+        }
+      }
+    }
+  }
+
+  // Check balance: This is not required by the sharding protocol, but is a
+  // desirable property for performance.
+  for (int shard_index = 0; shard_index < num_shards; shard_index++) {
+    int num_tests_on_shard = 0;
+    for (int test_id = 0; test_id < num_tests; test_id++) {
+      num_tests_on_shard +=
+        ShouldRunTestOnShard(num_shards, shard_index, test_id);
+    }
+    EXPECT_GE(num_tests_on_shard, num_tests / num_shards);
+  }
 }
 
 // For the same reason we are not explicitly testing everything in the
@@ -1585,31 +1818,31 @@ TEST(PredicateAssertionTest, AcceptsTemplateFunction) {
 // Some helper functions for testing using overloaded/template
 // functions with ASSERT_PRED_FORMATn and EXPECT_PRED_FORMATn.
 
-AssertionResult IsPositiveFormat(const char* expr, int n) {
+AssertionResult IsPositiveFormat(const char* /* expr */, int n) {
   return n > 0 ? AssertionSuccess() :
       AssertionFailure(Message() << "Failure");
 }
 
-AssertionResult IsPositiveFormat(const char* expr, double x) {
+AssertionResult IsPositiveFormat(const char* /* expr */, double x) {
   return x > 0 ? AssertionSuccess() :
       AssertionFailure(Message() << "Failure");
 }
 
 template <typename T>
-AssertionResult IsNegativeFormat(const char* expr, T x) {
+AssertionResult IsNegativeFormat(const char* /* expr */, T x) {
   return x < 0 ? AssertionSuccess() :
       AssertionFailure(Message() << "Failure");
 }
 
 template <typename T1, typename T2>
-AssertionResult EqualsFormat(const char* expr1, const char* expr2,
+AssertionResult EqualsFormat(const char* /* expr1 */, const char* /* expr2 */,
                              const T1& x1, const T2& x2) {
   return x1 == x2 ? AssertionSuccess() :
       AssertionFailure(Message() << "Failure");
 }
 
 // Tests that overloaded functions can be used in *_PRED_FORMAT*
-// without explictly specifying their types.
+// without explicitly specifying their types.
 TEST(PredicateFormatAssertionTest, AcceptsOverloadedFunction) {
   EXPECT_PRED_FORMAT1(IsPositiveFormat, 5);
   ASSERT_PRED_FORMAT1(IsPositiveFormat, 6.0);
@@ -2015,7 +2248,7 @@ TEST_F(FloatTest, LargeDiff) {
 TEST_F(FloatTest, Infinity) {
   EXPECT_FLOAT_EQ(infinity_, close_to_infinity_);
   EXPECT_FLOAT_EQ(-infinity_, -close_to_infinity_);
-#ifndef GTEST_OS_SYMBIAN
+#if !GTEST_OS_SYMBIAN
   // Nokia's STLport crashes if we try to output infinity or NaN.
   EXPECT_NONFATAL_FAILURE(EXPECT_FLOAT_EQ(infinity_, -infinity_),
                           "-infinity_");
@@ -2024,12 +2257,12 @@ TEST_F(FloatTest, Infinity) {
   // are only 1 DLP apart.
   EXPECT_NONFATAL_FAILURE(EXPECT_FLOAT_EQ(infinity_, nan1_),
                           "nan1_");
-#endif  // ! GTEST_OS_SYMBIAN
+#endif  // !GTEST_OS_SYMBIAN
 }
 
 // Tests that comparing with NAN always returns false.
 TEST_F(FloatTest, NaN) {
-#ifndef GTEST_OS_SYMBIAN
+#if !GTEST_OS_SYMBIAN
 // Nokia's STLport crashes if we try to output infinity or NaN.
   EXPECT_NONFATAL_FAILURE(EXPECT_FLOAT_EQ(nan1_, nan1_),
                           "nan1_");
@@ -2040,7 +2273,7 @@ TEST_F(FloatTest, NaN) {
 
   EXPECT_FATAL_FAILURE(ASSERT_FLOAT_EQ(nan1_, infinity_),
                        "infinity_");
-#endif  // ! GTEST_OS_SYMBIAN
+#endif  // !GTEST_OS_SYMBIAN
 }
 
 // Tests that *_FLOAT_EQ are reflexive.
@@ -2102,7 +2335,7 @@ TEST_F(FloatTest, FloatLEFails) {
     EXPECT_PRED_FORMAT2(FloatLE, further_from_one_, 1.0f);
   }, "(further_from_one_) <= (1.0f)");
 
-#ifndef GTEST_OS_SYMBIAN
+#if !GTEST_OS_SYMBIAN
   // Nokia's STLport crashes if we try to output infinity or NaN.
   // or when either val1 or val2 is NaN.
   EXPECT_NONFATAL_FAILURE({  // NOLINT
@@ -2115,7 +2348,7 @@ TEST_F(FloatTest, FloatLEFails) {
   EXPECT_FATAL_FAILURE({  // NOLINT
     ASSERT_PRED_FORMAT2(FloatLE, nan1_, nan1_);
   }, "(nan1_) <= (nan1_)");
-#endif  // ! GTEST_OS_SYMBIAN
+#endif  // !GTEST_OS_SYMBIAN
 }
 
 // Instantiates FloatingPointTest for testing *_DOUBLE_EQ.
@@ -2170,7 +2403,7 @@ TEST_F(DoubleTest, LargeDiff) {
 TEST_F(DoubleTest, Infinity) {
   EXPECT_DOUBLE_EQ(infinity_, close_to_infinity_);
   EXPECT_DOUBLE_EQ(-infinity_, -close_to_infinity_);
-#ifndef GTEST_OS_SYMBIAN
+#if !GTEST_OS_SYMBIAN
   // Nokia's STLport crashes if we try to output infinity or NaN.
   EXPECT_NONFATAL_FAILURE(EXPECT_DOUBLE_EQ(infinity_, -infinity_),
                           "-infinity_");
@@ -2179,29 +2412,29 @@ TEST_F(DoubleTest, Infinity) {
   // are only 1 DLP apart.
   EXPECT_NONFATAL_FAILURE(EXPECT_DOUBLE_EQ(infinity_, nan1_),
                           "nan1_");
-#endif  // ! GTEST_OS_SYMBIAN
+#endif  // !GTEST_OS_SYMBIAN
 }
 
 // Tests that comparing with NAN always returns false.
 TEST_F(DoubleTest, NaN) {
-#ifndef GTEST_OS_SYMBIAN
+#if !GTEST_OS_SYMBIAN
   // Nokia's STLport crashes if we try to output infinity or NaN.
   EXPECT_NONFATAL_FAILURE(EXPECT_DOUBLE_EQ(nan1_, nan1_),
                           "nan1_");
   EXPECT_NONFATAL_FAILURE(EXPECT_DOUBLE_EQ(nan1_, nan2_), "nan2_");
   EXPECT_NONFATAL_FAILURE(EXPECT_DOUBLE_EQ(1.0, nan1_), "nan1_");
   EXPECT_FATAL_FAILURE(ASSERT_DOUBLE_EQ(nan1_, infinity_), "infinity_");
-#endif  // ! GTEST_OS_SYMBIAN
+#endif  // !GTEST_OS_SYMBIAN
 }
 
 // Tests that *_DOUBLE_EQ are reflexive.
 TEST_F(DoubleTest, Reflexive) {
   EXPECT_DOUBLE_EQ(0.0, 0.0);
   EXPECT_DOUBLE_EQ(1.0, 1.0);
-#ifndef GTEST_OS_SYMBIAN
+#if !GTEST_OS_SYMBIAN
   // Nokia's STLport crashes if we try to output infinity or NaN.
   ASSERT_DOUBLE_EQ(infinity_, infinity_);
-#endif  // ! GTEST_OS_SYMBIAN
+#endif  // !GTEST_OS_SYMBIAN
 }
 
 // Tests that *_DOUBLE_EQ are commutative.
@@ -2255,7 +2488,7 @@ TEST_F(DoubleTest, DoubleLEFails) {
     EXPECT_PRED_FORMAT2(DoubleLE, further_from_one_, 1.0);
   }, "(further_from_one_) <= (1.0)");
 
-#ifndef GTEST_OS_SYMBIAN
+#if !GTEST_OS_SYMBIAN
   // Nokia's STLport crashes if we try to output infinity or NaN.
   // or when either val1 or val2 is NaN.
   EXPECT_NONFATAL_FAILURE({  // NOLINT
@@ -2267,7 +2500,7 @@ TEST_F(DoubleTest, DoubleLEFails) {
   EXPECT_FATAL_FAILURE({  // NOLINT
     ASSERT_PRED_FORMAT2(DoubleLE, nan1_, nan1_);
   }, "(nan1_) <= (nan1_)");
-#endif  // ! GTEST_OS_SYMBIAN
+#endif  // !GTEST_OS_SYMBIAN
 }
 
 
@@ -2323,7 +2556,7 @@ TEST_F(DisabledTestsTest, DISABLED_TestShouldNotRun_2) {
 
 // Tests that disabled typed tests aren't run.
 
-#ifdef GTEST_HAS_TYPED_TEST
+#if GTEST_HAS_TYPED_TEST
 
 template <typename T>
 class TypedTest : public Test {
@@ -2350,7 +2583,7 @@ TYPED_TEST(DISABLED_TypedTest, ShouldNotRun) {
 
 // Tests that disabled type-parameterized tests aren't run.
 
-#ifdef GTEST_HAS_TYPED_TEST_P
+#if GTEST_HAS_TYPED_TEST_P
 
 template <typename T>
 class TypedTestP : public Test {
@@ -2728,7 +2961,7 @@ TEST(AssertionTest, ASSERT_EQ) {
 }
 
 // Tests ASSERT_EQ(NULL, pointer).
-#ifndef GTEST_OS_SYMBIAN
+#if !GTEST_OS_SYMBIAN
 // The NULL-detection template magic fails to compile with
 // the Nokia compiler and crashes the ARM compiler, hence
 // not testing on Symbian.
@@ -2742,7 +2975,7 @@ TEST(AssertionTest, ASSERT_EQ_NULL) {
   EXPECT_FATAL_FAILURE(ASSERT_EQ(NULL, &n),
                        "Value of: &n\n");
 }
-#endif  // GTEST_OS_SYMBIAN
+#endif  // !GTEST_OS_SYMBIAN
 
 // Tests ASSERT_EQ(0, non_pointer).  Since the literal 0 can be
 // treated as a null pointer by the compiler, we need to make sure
@@ -2799,31 +3032,37 @@ TEST(AssertionTest, ASSERT_GT) {
 
 #if GTEST_HAS_EXCEPTIONS
 
+void ThrowNothing() {}
+
+
 // Tests ASSERT_THROW.
 TEST(AssertionTest, ASSERT_THROW) {
   ASSERT_THROW(ThrowAnInteger(), int);
-  EXPECT_FATAL_FAILURE(ASSERT_THROW(ThrowAnInteger(), bool),
-                       "Expected: ThrowAnInteger() throws an exception of type"\
-                       " bool.\n  Actual: it throws a different type.");
-  EXPECT_FATAL_FAILURE(ASSERT_THROW(1, bool),
-                       "Expected: 1 throws an exception of type bool.\n"\
-                       "  Actual: it throws nothing.");
+  EXPECT_FATAL_FAILURE(
+      ASSERT_THROW(ThrowAnInteger(), bool),
+      "Expected: ThrowAnInteger() throws an exception of type bool.\n"
+      "  Actual: it throws a different type.");
+  EXPECT_FATAL_FAILURE(
+      ASSERT_THROW(ThrowNothing(), bool),
+      "Expected: ThrowNothing() throws an exception of type bool.\n"
+      "  Actual: it throws nothing.");
 }
 
 // Tests ASSERT_NO_THROW.
 TEST(AssertionTest, ASSERT_NO_THROW) {
-  ASSERT_NO_THROW(1);
+  ASSERT_NO_THROW(ThrowNothing());
   EXPECT_FATAL_FAILURE(ASSERT_NO_THROW(ThrowAnInteger()),
-                       "Expected: ThrowAnInteger() doesn't throw an exception."\
+                       "Expected: ThrowAnInteger() doesn't throw an exception."
                        "\n  Actual: it throws.");
 }
 
 // Tests ASSERT_ANY_THROW.
 TEST(AssertionTest, ASSERT_ANY_THROW) {
   ASSERT_ANY_THROW(ThrowAnInteger());
-  EXPECT_FATAL_FAILURE(ASSERT_ANY_THROW(1),
-                       "Expected: 1 throws an exception.\n  Actual: it "\
-                       "doesn't.");
+  EXPECT_FATAL_FAILURE(
+      ASSERT_ANY_THROW(ThrowNothing()),
+      "Expected: ThrowNothing() throws an exception.\n"
+      "  Actual: it doesn't.");
 }
 
 #endif  // GTEST_HAS_EXCEPTIONS
@@ -2911,12 +3150,12 @@ TEST(AssertionTest, ExpectWorksWithUncopyableObject) {
 // The version of gcc used in XCode 2.2 has a bug and doesn't allow
 // anonymous enums in assertions.  Therefore the following test is
 // done only on Linux and Windows.
-#if defined(GTEST_OS_LINUX) || defined(GTEST_OS_WINDOWS)
+#if GTEST_OS_LINUX || GTEST_OS_WINDOWS
 
 // Tests using assertions with anonymous enums.
 enum {
   CASE_A = -1,
-#ifdef GTEST_OS_LINUX
+#if GTEST_OS_LINUX
   // We want to test the case where the size of the anonymous enum is
   // larger than sizeof(int), to make sure our implementation of the
   // assertions doesn't truncate the enums.  However, MSVC
@@ -2933,7 +3172,7 @@ enum {
 };
 
 TEST(AssertionTest, AnonymousEnum) {
-#ifdef GTEST_OS_LINUX
+#if GTEST_OS_LINUX
   EXPECT_EQ(static_cast<int>(CASE_A), static_cast<int>(CASE_B));
 #endif  // GTEST_OS_LINUX
 
@@ -2956,9 +3195,9 @@ TEST(AssertionTest, AnonymousEnum) {
                        "Value of: CASE_B");
 }
 
-#endif  // defined(GTEST_OS_LINUX) || defined(GTEST_OS_WINDOWS)
+#endif  // GTEST_OS_LINUX || GTEST_OS_WINDOWS
 
-#if defined(GTEST_OS_WINDOWS)
+#if GTEST_OS_WINDOWS
 
 static HRESULT UnexpectedHRESULTFailure() {
   return E_UNEXPECTED;
@@ -3040,7 +3279,7 @@ TEST(HRESULTAssertionTest, Streaming) {
       "expected failure");
 }
 
-#endif  // defined(GTEST_OS_WINDOWS)
+#endif  // GTEST_OS_WINDOWS
 
 // Tests that the assertion macros behave like single statements.
 TEST(AssertionSyntaxTest, BasicAssertionsBehavesLikeSingleStatement) {
@@ -3063,9 +3302,23 @@ TEST(AssertionSyntaxTest, BasicAssertionsBehavesLikeSingleStatement) {
 }
 
 #if GTEST_HAS_EXCEPTIONS
+// Tests that the compiler will not complain about unreachable code in the
+// EXPECT_THROW/EXPECT_ANY_THROW/EXPECT_NO_THROW macros.
+TEST(ExpectThrowTest, DoesNotGenerateUnreachableCodeWarning) {
+  int n = 0;
+
+  EXPECT_THROW(throw 1, int);
+  EXPECT_NONFATAL_FAILURE(EXPECT_THROW(n++, int), "");
+  EXPECT_NONFATAL_FAILURE(EXPECT_THROW(throw 1, const char*), "");
+  EXPECT_NO_THROW(n++);
+  EXPECT_NONFATAL_FAILURE(EXPECT_NO_THROW(throw 1), "");
+  EXPECT_ANY_THROW(throw 1);
+  EXPECT_NONFATAL_FAILURE(EXPECT_ANY_THROW(n++), "");
+}
+
 TEST(AssertionSyntaxTest, ExceptionAssertionsBehavesLikeSingleStatement) {
   if (false)
-    EXPECT_THROW(1, bool);
+    EXPECT_THROW(ThrowNothing(), bool);
 
   if (true)
     EXPECT_THROW(ThrowAnInteger(), int);
@@ -3076,12 +3329,12 @@ TEST(AssertionSyntaxTest, ExceptionAssertionsBehavesLikeSingleStatement) {
     EXPECT_NO_THROW(ThrowAnInteger());
 
   if (true)
-    EXPECT_NO_THROW(1);
+    EXPECT_NO_THROW(ThrowNothing());
   else
     ;
 
   if (false)
-    EXPECT_ANY_THROW(1);
+    EXPECT_ANY_THROW(ThrowNothing());
 
   if (true)
     EXPECT_ANY_THROW(ThrowAnInteger());
@@ -3245,7 +3498,7 @@ TEST(ExpectTest, EXPECT_EQ_Double) {
                           "5.1");
 }
 
-#ifndef GTEST_OS_SYMBIAN
+#if !GTEST_OS_SYMBIAN
 // Tests EXPECT_EQ(NULL, pointer).
 TEST(ExpectTest, EXPECT_EQ_NULL) {
   // A success.
@@ -3257,7 +3510,7 @@ TEST(ExpectTest, EXPECT_EQ_NULL) {
   EXPECT_NONFATAL_FAILURE(EXPECT_EQ(NULL, &n),
                           "Value of: &n\n");
 }
-#endif  // GTEST_OS_SYMBIAN
+#endif  // !GTEST_OS_SYMBIAN
 
 // Tests EXPECT_EQ(0, non_pointer).  Since the literal 0 can be
 // treated as a null pointer by the compiler, we need to make sure
@@ -3340,27 +3593,29 @@ TEST(ExpectTest, EXPECT_GT) {
 TEST(ExpectTest, EXPECT_THROW) {
   EXPECT_THROW(ThrowAnInteger(), int);
   EXPECT_NONFATAL_FAILURE(EXPECT_THROW(ThrowAnInteger(), bool),
-                          "Expected: ThrowAnInteger() throws an exception of "\
+                          "Expected: ThrowAnInteger() throws an exception of "
                           "type bool.\n  Actual: it throws a different type.");
-  EXPECT_NONFATAL_FAILURE(EXPECT_THROW(1, bool),
-                          "Expected: 1 throws an exception of type bool.\n"\
-                          "  Actual: it throws nothing.");
+  EXPECT_NONFATAL_FAILURE(
+      EXPECT_THROW(ThrowNothing(), bool),
+      "Expected: ThrowNothing() throws an exception of type bool.\n"
+      "  Actual: it throws nothing.");
 }
 
 // Tests EXPECT_NO_THROW.
 TEST(ExpectTest, EXPECT_NO_THROW) {
-  EXPECT_NO_THROW(1);
+  EXPECT_NO_THROW(ThrowNothing());
   EXPECT_NONFATAL_FAILURE(EXPECT_NO_THROW(ThrowAnInteger()),
-                          "Expected: ThrowAnInteger() doesn't throw an "\
+                          "Expected: ThrowAnInteger() doesn't throw an "
                           "exception.\n  Actual: it throws.");
 }
 
 // Tests EXPECT_ANY_THROW.
 TEST(ExpectTest, EXPECT_ANY_THROW) {
   EXPECT_ANY_THROW(ThrowAnInteger());
-  EXPECT_NONFATAL_FAILURE(EXPECT_ANY_THROW(1),
-                          "Expected: 1 throws an exception.\n  Actual: it "\
-                          "doesn't.");
+  EXPECT_NONFATAL_FAILURE(
+      EXPECT_ANY_THROW(ThrowNothing()),
+      "Expected: ThrowNothing() throws an exception.\n"
+      "  Actual: it doesn't.");
 }
 
 #endif  // GTEST_HAS_EXCEPTIONS
@@ -4062,15 +4317,26 @@ TEST_F(SetUpTestCaseTest, Test2) {
 // The Flags struct stores a copy of all Google Test flags.
 struct Flags {
   // Constructs a Flags struct where each flag has its default value.
-  Flags() : break_on_failure(false),
+  Flags() : also_run_disabled_tests(false),
+            break_on_failure(false),
             catch_exceptions(false),
+            death_test_use_fork(false),
             filter(""),
             list_tests(false),
             output(""),
             print_time(false),
-            repeat(1) {}
+            repeat(1),
+            throw_on_failure(false) {}
 
   // Factory methods.
+
+  // Creates a Flags struct where the gtest_also_run_disabled_tests flag has
+  // the given value.
+  static Flags AlsoRunDisabledTests(bool also_run_disabled_tests) {
+    Flags flags;
+    flags.also_run_disabled_tests = also_run_disabled_tests;
+    return flags;
+  }
 
   // Creates a Flags struct where the gtest_break_on_failure flag has
   // the given value.
@@ -4085,6 +4351,14 @@ struct Flags {
   static Flags CatchExceptions(bool catch_exceptions) {
     Flags flags;
     flags.catch_exceptions = catch_exceptions;
+    return flags;
+  }
+
+  // Creates a Flags struct where the gtest_death_test_use_fork flag has
+  // the given value.
+  static Flags DeathTestUseFork(bool death_test_use_fork) {
+    Flags flags;
+    flags.death_test_use_fork = death_test_use_fork;
     return flags;
   }
 
@@ -4128,14 +4402,25 @@ struct Flags {
     return flags;
   }
 
+  // Creates a Flags struct where the gtest_throw_on_failure flag has
+  // the given value.
+  static Flags ThrowOnFailure(bool throw_on_failure) {
+    Flags flags;
+    flags.throw_on_failure = throw_on_failure;
+    return flags;
+  }
+
   // These fields store the flag values.
+  bool also_run_disabled_tests;
   bool break_on_failure;
   bool catch_exceptions;
+  bool death_test_use_fork;
   const char* filter;
   bool list_tests;
   const char* output;
   bool print_time;
   Int32 repeat;
+  bool throw_on_failure;
 };
 
 // Fixture for testing InitGoogleTest().
@@ -4143,13 +4428,16 @@ class InitGoogleTestTest : public Test {
  protected:
   // Clears the flags before each test.
   virtual void SetUp() {
+    GTEST_FLAG(also_run_disabled_tests) = false;
     GTEST_FLAG(break_on_failure) = false;
     GTEST_FLAG(catch_exceptions) = false;
+    GTEST_FLAG(death_test_use_fork) = false;
     GTEST_FLAG(filter) = "";
     GTEST_FLAG(list_tests) = false;
     GTEST_FLAG(output) = "";
     GTEST_FLAG(print_time) = false;
     GTEST_FLAG(repeat) = 1;
+    GTEST_FLAG(throw_on_failure) = false;
   }
 
   // Asserts that two narrow or wide string arrays are equal.
@@ -4165,13 +4453,17 @@ class InitGoogleTestTest : public Test {
 
   // Verifies that the flag values match the expected values.
   static void CheckFlags(const Flags& expected) {
+    EXPECT_EQ(expected.also_run_disabled_tests,
+              GTEST_FLAG(also_run_disabled_tests));
     EXPECT_EQ(expected.break_on_failure, GTEST_FLAG(break_on_failure));
     EXPECT_EQ(expected.catch_exceptions, GTEST_FLAG(catch_exceptions));
+    EXPECT_EQ(expected.death_test_use_fork, GTEST_FLAG(death_test_use_fork));
     EXPECT_STREQ(expected.filter, GTEST_FLAG(filter).c_str());
     EXPECT_EQ(expected.list_tests, GTEST_FLAG(list_tests));
     EXPECT_STREQ(expected.output, GTEST_FLAG(output).c_str());
     EXPECT_EQ(expected.print_time, GTEST_FLAG(print_time));
     EXPECT_EQ(expected.repeat, GTEST_FLAG(repeat));
+    EXPECT_EQ(expected.throw_on_failure, GTEST_FLAG(throw_on_failure));
   }
 
   // Parses a command line (specified by argc1 and argv1), then
@@ -4194,7 +4486,7 @@ class InitGoogleTestTest : public Test {
 
   // This macro wraps TestParsingFlags s.t. the user doesn't need
   // to specify the array sizes.
-#define TEST_PARSING_FLAGS(argv1, argv2, expected) \
+#define GTEST_TEST_PARSING_FLAGS_(argv1, argv2, expected) \
   TestParsingFlags(sizeof(argv1)/sizeof(*argv1) - 1, argv1, \
                    sizeof(argv2)/sizeof(*argv2) - 1, argv2, expected)
 };
@@ -4209,7 +4501,7 @@ TEST_F(InitGoogleTestTest, Empty) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags());
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags());
 }
 
 // Tests parsing a command line that has no flag.
@@ -4224,7 +4516,7 @@ TEST_F(InitGoogleTestTest, NoFlag) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags());
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags());
 }
 
 // Tests parsing a bad --gtest_filter flag.
@@ -4241,7 +4533,7 @@ TEST_F(InitGoogleTestTest, FilterBad) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags::Filter(""));
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::Filter(""));
 }
 
 // Tests parsing an empty --gtest_filter flag.
@@ -4257,7 +4549,7 @@ TEST_F(InitGoogleTestTest, FilterEmpty) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags::Filter(""));
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::Filter(""));
 }
 
 // Tests parsing a non-empty --gtest_filter flag.
@@ -4273,7 +4565,7 @@ TEST_F(InitGoogleTestTest, FilterNonEmpty) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags::Filter("abc"));
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::Filter("abc"));
 }
 
 // Tests parsing --gtest_break_on_failure.
@@ -4289,7 +4581,7 @@ TEST_F(InitGoogleTestTest, BreakOnFailureNoDef) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags::BreakOnFailure(true));
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::BreakOnFailure(true));
 }
 
 // Tests parsing --gtest_break_on_failure=0.
@@ -4305,7 +4597,7 @@ TEST_F(InitGoogleTestTest, BreakOnFailureFalse_0) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags::BreakOnFailure(false));
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::BreakOnFailure(false));
 }
 
 // Tests parsing --gtest_break_on_failure=f.
@@ -4321,7 +4613,7 @@ TEST_F(InitGoogleTestTest, BreakOnFailureFalse_f) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags::BreakOnFailure(false));
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::BreakOnFailure(false));
 }
 
 // Tests parsing --gtest_break_on_failure=F.
@@ -4337,7 +4629,7 @@ TEST_F(InitGoogleTestTest, BreakOnFailureFalse_F) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags::BreakOnFailure(false));
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::BreakOnFailure(false));
 }
 
 // Tests parsing a --gtest_break_on_failure flag that has a "true"
@@ -4354,7 +4646,7 @@ TEST_F(InitGoogleTestTest, BreakOnFailureTrue) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags::BreakOnFailure(true));
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::BreakOnFailure(true));
 }
 
 // Tests parsing --gtest_catch_exceptions.
@@ -4370,7 +4662,23 @@ TEST_F(InitGoogleTestTest, CatchExceptions) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags::CatchExceptions(true));
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::CatchExceptions(true));
+}
+
+// Tests parsing --gtest_death_test_use_fork.
+TEST_F(InitGoogleTestTest, DeathTestUseFork) {
+  const char* argv[] = {
+    "foo.exe",
+    "--gtest_death_test_use_fork",
+    NULL
+  };
+
+  const char* argv2[] = {
+    "foo.exe",
+    NULL
+  };
+
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::DeathTestUseFork(true));
 }
 
 // Tests having the same flag twice with different values.  The
@@ -4388,7 +4696,7 @@ TEST_F(InitGoogleTestTest, DuplicatedFlags) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags::Filter("b"));
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::Filter("b"));
 }
 
 // Tests having an unrecognized flag on the command line.
@@ -4410,7 +4718,7 @@ TEST_F(InitGoogleTestTest, UnrecognizedFlag) {
   Flags flags;
   flags.break_on_failure = true;
   flags.filter = "b";
-  TEST_PARSING_FLAGS(argv, argv2, flags);
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, flags);
 }
 
 // Tests having a --gtest_list_tests flag
@@ -4426,7 +4734,7 @@ TEST_F(InitGoogleTestTest, ListTestsFlag) {
       NULL
     };
 
-    TEST_PARSING_FLAGS(argv, argv2, Flags::ListTests(true));
+    GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::ListTests(true));
 }
 
 // Tests having a --gtest_list_tests flag with a "true" value
@@ -4442,7 +4750,7 @@ TEST_F(InitGoogleTestTest, ListTestsTrue) {
       NULL
     };
 
-    TEST_PARSING_FLAGS(argv, argv2, Flags::ListTests(true));
+    GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::ListTests(true));
 }
 
 // Tests having a --gtest_list_tests flag with a "false" value
@@ -4458,7 +4766,7 @@ TEST_F(InitGoogleTestTest, ListTestsFalse) {
       NULL
     };
 
-    TEST_PARSING_FLAGS(argv, argv2, Flags::ListTests(false));
+    GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::ListTests(false));
 }
 
 // Tests parsing --gtest_list_tests=f.
@@ -4474,7 +4782,7 @@ TEST_F(InitGoogleTestTest, ListTestsFalse_f) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags::ListTests(false));
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::ListTests(false));
 }
 
 // Tests parsing --gtest_break_on_failure=F.
@@ -4490,7 +4798,7 @@ TEST_F(InitGoogleTestTest, ListTestsFalse_F) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags::ListTests(false));
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::ListTests(false));
 }
 
 // Tests parsing --gtest_output (invalid).
@@ -4507,7 +4815,7 @@ TEST_F(InitGoogleTestTest, OutputEmpty) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags());
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags());
 }
 
 // Tests parsing --gtest_output=xml
@@ -4523,7 +4831,7 @@ TEST_F(InitGoogleTestTest, OutputXml) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags::Output("xml"));
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::Output("xml"));
 }
 
 // Tests parsing --gtest_output=xml:file
@@ -4539,7 +4847,7 @@ TEST_F(InitGoogleTestTest, OutputXmlFile) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags::Output("xml:file"));
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::Output("xml:file"));
 }
 
 // Tests parsing --gtest_output=xml:directory/path/
@@ -4555,7 +4863,7 @@ TEST_F(InitGoogleTestTest, OutputXmlDirectory) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags::Output("xml:directory/path/"));
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::Output("xml:directory/path/"));
 }
 
 // Tests having a --gtest_print_time flag
@@ -4571,7 +4879,7 @@ TEST_F(InitGoogleTestTest, PrintTimeFlag) {
       NULL
     };
 
-    TEST_PARSING_FLAGS(argv, argv2, Flags::PrintTime(true));
+    GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::PrintTime(true));
 }
 
 // Tests having a --gtest_print_time flag with a "true" value
@@ -4587,7 +4895,7 @@ TEST_F(InitGoogleTestTest, PrintTimeTrue) {
       NULL
     };
 
-    TEST_PARSING_FLAGS(argv, argv2, Flags::PrintTime(true));
+    GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::PrintTime(true));
 }
 
 // Tests having a --gtest_print_time flag with a "false" value
@@ -4603,7 +4911,7 @@ TEST_F(InitGoogleTestTest, PrintTimeFalse) {
       NULL
     };
 
-    TEST_PARSING_FLAGS(argv, argv2, Flags::PrintTime(false));
+    GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::PrintTime(false));
 }
 
 // Tests parsing --gtest_print_time=f.
@@ -4619,7 +4927,7 @@ TEST_F(InitGoogleTestTest, PrintTimeFalse_f) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags::PrintTime(false));
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::PrintTime(false));
 }
 
 // Tests parsing --gtest_print_time=F.
@@ -4635,7 +4943,7 @@ TEST_F(InitGoogleTestTest, PrintTimeFalse_F) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags::PrintTime(false));
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::PrintTime(false));
 }
 
 // Tests parsing --gtest_repeat=number
@@ -4651,10 +4959,108 @@ TEST_F(InitGoogleTestTest, Repeat) {
     NULL
   };
 
-  TEST_PARSING_FLAGS(argv, argv2, Flags::Repeat(1000));
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::Repeat(1000));
 }
 
-#ifdef GTEST_OS_WINDOWS
+// Tests having a --gtest_also_run_disabled_tests flag
+TEST_F(InitGoogleTestTest, AlsoRunDisabledTestsFlag) {
+    const char* argv[] = {
+      "foo.exe",
+      "--gtest_also_run_disabled_tests",
+      NULL
+    };
+
+    const char* argv2[] = {
+      "foo.exe",
+      NULL
+    };
+
+    GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::AlsoRunDisabledTests(true));
+}
+
+// Tests having a --gtest_also_run_disabled_tests flag with a "true" value
+TEST_F(InitGoogleTestTest, AlsoRunDisabledTestsTrue) {
+    const char* argv[] = {
+      "foo.exe",
+      "--gtest_also_run_disabled_tests=1",
+      NULL
+    };
+
+    const char* argv2[] = {
+      "foo.exe",
+      NULL
+    };
+
+    GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::AlsoRunDisabledTests(true));
+}
+
+// Tests having a --gtest_also_run_disabled_tests flag with a "false" value
+TEST_F(InitGoogleTestTest, AlsoRunDisabledTestsFalse) {
+    const char* argv[] = {
+      "foo.exe",
+      "--gtest_also_run_disabled_tests=0",
+      NULL
+    };
+
+    const char* argv2[] = {
+      "foo.exe",
+      NULL
+    };
+
+    GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::AlsoRunDisabledTests(false));
+}
+
+
+// Tests parsing --gtest_throw_on_failure.
+TEST_F(InitGoogleTestTest, ThrowOnFailureNoDef) {
+  const char* argv[] = {
+    "foo.exe",
+    "--gtest_throw_on_failure",
+    NULL
+};
+
+  const char* argv2[] = {
+    "foo.exe",
+    NULL
+  };
+
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::ThrowOnFailure(true));
+}
+
+// Tests parsing --gtest_throw_on_failure=0.
+TEST_F(InitGoogleTestTest, ThrowOnFailureFalse_0) {
+  const char* argv[] = {
+    "foo.exe",
+    "--gtest_throw_on_failure=0",
+    NULL
+  };
+
+  const char* argv2[] = {
+    "foo.exe",
+    NULL
+  };
+
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::ThrowOnFailure(false));
+}
+
+// Tests parsing a --gtest_throw_on_failure flag that has a "true"
+// definition.
+TEST_F(InitGoogleTestTest, ThrowOnFailureTrue) {
+  const char* argv[] = {
+    "foo.exe",
+    "--gtest_throw_on_failure=1",
+    NULL
+  };
+
+  const char* argv2[] = {
+    "foo.exe",
+    NULL
+  };
+
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, Flags::ThrowOnFailure(true));
+}
+
+#if GTEST_OS_WINDOWS
 // Tests parsing wide strings.
 TEST_F(InitGoogleTestTest, WideStrings) {
   const wchar_t* argv[] = {
@@ -4677,7 +5083,7 @@ TEST_F(InitGoogleTestTest, WideStrings) {
   expected_flags.filter = "Foo*";
   expected_flags.list_tests = true;
 
-  TEST_PARSING_FLAGS(argv, argv2, expected_flags);
+  GTEST_TEST_PARSING_FLAGS_(argv, argv2, expected_flags);
 }
 #endif  // GTEST_OS_WINDOWS
 
@@ -4883,8 +5289,8 @@ TEST(StreamingAssertionsTest, Throw) {
 }
 
 TEST(StreamingAssertionsTest, NoThrow) {
-  EXPECT_NO_THROW(1) << "unexpected failure";
-  ASSERT_NO_THROW(1) << "unexpected failure";
+  EXPECT_NO_THROW(ThrowNothing()) << "unexpected failure";
+  ASSERT_NO_THROW(ThrowNothing()) << "unexpected failure";
   EXPECT_NONFATAL_FAILURE(EXPECT_NO_THROW(ThrowAnInteger()) <<
                           "expected failure", "expected failure");
   EXPECT_FATAL_FAILURE(ASSERT_NO_THROW(ThrowAnInteger()) <<
@@ -4894,9 +5300,9 @@ TEST(StreamingAssertionsTest, NoThrow) {
 TEST(StreamingAssertionsTest, AnyThrow) {
   EXPECT_ANY_THROW(ThrowAnInteger()) << "unexpected failure";
   ASSERT_ANY_THROW(ThrowAnInteger()) << "unexpected failure";
-  EXPECT_NONFATAL_FAILURE(EXPECT_ANY_THROW(1) <<
+  EXPECT_NONFATAL_FAILURE(EXPECT_ANY_THROW(ThrowNothing()) <<
                           "expected failure", "expected failure");
-  EXPECT_FATAL_FAILURE(ASSERT_ANY_THROW(1) <<
+  EXPECT_FATAL_FAILURE(ASSERT_ANY_THROW(ThrowNothing()) <<
                        "expected failure", "expected failure");
 }
 
@@ -4965,7 +5371,7 @@ TEST(ColoredOutputTest, UsesColorsWhenStdoutIsTty) {
 TEST(ColoredOutputTest, UsesColorsWhenTermSupportsColors) {
   GTEST_FLAG(color) = "auto";
 
-#ifdef GTEST_OS_WINDOWS
+#if GTEST_OS_WINDOWS
   // On Windows, we ignore the TERM variable as it's usually not set.
 
   SetEnv("TERM", "dumb");
@@ -5000,6 +5406,32 @@ TEST(ColoredOutputTest, UsesColorsWhenTermSupportsColors) {
 #endif  // GTEST_OS_WINDOWS
 }
 
+// Verifies that StaticAssertTypeEq works in a namespace scope.
+
+static bool dummy1 = StaticAssertTypeEq<bool, bool>();
+static bool dummy2 = StaticAssertTypeEq<const int, const int>();
+
+// Verifies that StaticAssertTypeEq works in a class.
+
+template <typename T>
+class StaticAssertTypeEqTestHelper {
+ public:
+  StaticAssertTypeEqTestHelper() { StaticAssertTypeEq<bool, T>(); }
+};
+
+TEST(StaticAssertTypeEqTest, WorksInClass) {
+  StaticAssertTypeEqTestHelper<bool>();
+}
+
+// Verifies that StaticAssertTypeEq works inside a function.
+
+typedef int IntAlias;
+
+TEST(StaticAssertTypeEqTest, CompilesForEqualTypes) {
+  StaticAssertTypeEq<int, IntAlias>();
+  StaticAssertTypeEq<int*, IntAlias*>();
+}
+
 TEST(ThreadLocalTest, DefaultConstructor) {
   ThreadLocal<int> t1;
   EXPECT_EQ(0, t1.get());
@@ -5024,22 +5456,3 @@ TEST(GetCurrentOsStackTraceExceptTopTest, ReturnsTheStackTrace) {
   EXPECT_STREQ("", GetCurrentOsStackTraceExceptTop(unit_test, 0).c_str());
   EXPECT_STREQ("", GetCurrentOsStackTraceExceptTop(unit_test, 1).c_str());
 }
-
-#ifndef GTEST_OS_SYMBIAN
-// We will want to integrate running the unittests to a different
-// main application on Symbian.
-int main(int argc, char** argv) {
-  testing::InitGoogleTest(&argc, argv);
-
-#ifdef GTEST_HAS_DEATH_TEST
-  if (!testing::internal::GTEST_FLAG(internal_run_death_test).empty()) {
-    // Skip the usual output capturing if we're running as the child
-    // process of an threadsafe-style death test.
-    freopen("/dev/null", "w", stdout);
-  }
-#endif  // GTEST_HAS_DEATH_TEST
-
-  // Runs all tests using Google Test.
-  return RUN_ALL_TESTS();
-}
-#endif  // GTEST_OS_SYMBIAN

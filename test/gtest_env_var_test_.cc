@@ -36,9 +36,9 @@
 
 #include <iostream>
 
-#define GTEST_IMPLEMENTATION
+#define GTEST_IMPLEMENTATION_ 1
 #include "src/gtest-internal-inl.h"
-#undef GTEST_IMPLEMENTATION
+#undef GTEST_IMPLEMENTATION_
 
 using ::std::cout;
 
@@ -71,6 +71,11 @@ void PrintFlag(const char* flag) {
     return;
   }
 
+  if (strcmp(flag, "death_test_use_fork") == 0) {
+    cout << GTEST_FLAG(death_test_use_fork);
+    return;
+  }
+
   if (strcmp(flag, "filter") == 0) {
     cout << GTEST_FLAG(filter);
     return;
@@ -93,6 +98,11 @@ void PrintFlag(const char* flag) {
 
   if (strcmp(flag, "stack_trace_depth") == 0) {
     cout << GTEST_FLAG(stack_trace_depth);
+    return;
+  }
+
+  if (strcmp(flag, "throw_on_failure") == 0) {
+    cout << GTEST_FLAG(throw_on_failure);
     return;
   }
 

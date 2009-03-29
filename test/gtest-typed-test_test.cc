@@ -82,7 +82,7 @@ template <typename T>
 T* CommonTest<T>::shared_ = NULL;
 
 // This #ifdef block tests typed tests.
-#ifdef GTEST_HAS_TYPED_TEST
+#if GTEST_HAS_TYPED_TEST
 
 using testing::Types;
 
@@ -166,7 +166,7 @@ TYPED_TEST(NumericTest, DefaultIsZero) {
 #endif  // GTEST_HAS_TYPED_TEST
 
 // This #ifdef block tests type-parameterized tests.
-#ifdef GTEST_HAS_TYPED_TEST_P
+#if GTEST_HAS_TYPED_TEST_P
 
 using testing::Types;
 using testing::internal::TypedTestCasePState;
@@ -198,26 +198,26 @@ TEST_F(TypedTestCasePStateTest, IgnoresOrderAndSpaces) {
             state_.VerifyRegisteredTestNames("foo.cc", 1, tests));
 }
 
-#ifdef GTEST_HAS_DEATH_TEST
+#if GTEST_HAS_DEATH_TEST
 
 typedef TypedTestCasePStateTest TypedTestCasePStateDeathTest;
 
 TEST_F(TypedTestCasePStateDeathTest, DetectsDuplicates) {
   EXPECT_DEATH(
       state_.VerifyRegisteredTestNames("foo.cc", 1, "A, B, A, C"),
-      "foo\\.cc:1: Test A is listed more than once\\.");
+      "foo\\.cc.1.?: Test A is listed more than once\\.");
 }
 
 TEST_F(TypedTestCasePStateDeathTest, DetectsExtraTest) {
   EXPECT_DEATH(
       state_.VerifyRegisteredTestNames("foo.cc", 1, "A, B, C, D"),
-      "foo\\.cc:1: No test named D can be found in this test case\\.");
+      "foo\\.cc.1.?: No test named D can be found in this test case\\.");
 }
 
 TEST_F(TypedTestCasePStateDeathTest, DetectsMissedTest) {
   EXPECT_DEATH(
       state_.VerifyRegisteredTestNames("foo.cc", 1, "A, C"),
-      "foo\\.cc:1: You forgot to list test B\\.");
+      "foo\\.cc.1.?: You forgot to list test B\\.");
 }
 
 // Tests that defining a test for a parameterized test case generates
@@ -226,7 +226,7 @@ TEST_F(TypedTestCasePStateDeathTest, DetectsTestAfterRegistration) {
   state_.VerifyRegisteredTestNames("foo.cc", 1, "A, B, C");
   EXPECT_DEATH(
       state_.AddTestName("foo.cc", 2, "FooTest", "D"),
-      "foo\\.cc:2: Test D must be defined before REGISTER_TYPED_TEST_CASE_P"
+      "foo\\.cc.2.?: Test D must be defined before REGISTER_TYPED_TEST_CASE_P"
       "\\(FooTest, \\.\\.\\.\\)\\.");
 }
 
