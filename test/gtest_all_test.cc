@@ -1,4 +1,4 @@
-// Copyright 2006, Google Inc.
+// Copyright 2009, Google Inc.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -28,39 +28,20 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // Author: wan@google.com (Zhanyong Wan)
-
-// Unit test for Google Test's break-on-failure mode.
 //
-// A user can ask Google Test to seg-fault when an assertion fails, using
-// either the GTEST_BREAK_ON_FAILURE environment variable or the
-// --gtest_break_on_failure flag.  This file is used for testing such
-// functionality.
+// Tests for Google C++ Testing Framework (Google Test)
 //
-// This program will be invoked from a Python unit test.  It is
-// expected to fail.  Don't run it directly.
-
-#include <gtest/gtest.h>
-
-#if GTEST_OS_WINDOWS
-#include <windows.h>
-#endif
-
-namespace {
-
-// A test that's expected to fail.
-TEST(Foo, Bar) {
-  EXPECT_EQ(2, 3);
-}
-
-}  // namespace
-
-int main(int argc, char **argv) {
-#if GTEST_OS_WINDOWS
-  // Suppresses display of the Windows error dialog upon encountering
-  // a general protection fault (segment violation).
-  SetErrorMode(SEM_NOGPFAULTERRORBOX | SEM_FAILCRITICALERRORS);
-#endif
-  testing::InitGoogleTest(&argc, argv);
-
-  return RUN_ALL_TESTS();
-}
+// Sometimes it's desirable to build most of Google Test's own tests
+// by compiling a single file.  This file serves this purpose.
+#include "test/gtest-filepath_test.cc"
+#include "test/gtest-linked_ptr_test.cc"
+#include "test/gtest-message_test.cc"
+#include "test/gtest-options_test.cc"
+#include "test/gtest-port_test.cc"
+#include "test/gtest_pred_impl_unittest.cc"
+#include "test/gtest_prod_test.cc"
+#include "test/gtest-test-part_test.cc"
+#include "test/gtest-typed-test_test.cc"
+#include "test/gtest-typed-test2_test.cc"
+#include "test/gtest_unittest.cc"
+#include "test/production.cc"

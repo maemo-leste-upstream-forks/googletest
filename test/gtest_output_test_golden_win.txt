@@ -5,10 +5,30 @@ gtest_output_test_.cc:#: error: Value of: false
 Expected: true
 gtest_output_test_.cc:#: error: Value of: 3
 Expected: 2
-[==========] Running 50 tests from 20 test cases.
+[==========] Running 57 tests from 26 test cases.
 [----------] Global test environment set-up.
 FooEnvironment::SetUp() called.
 BarEnvironment::SetUp() called.
+[----------] 1 test from ADeathTest
+[ RUN      ] ADeathTest.ShouldRunFirst
+[       OK ] ADeathTest.ShouldRunFirst
+[----------] 1 test from ATypedDeathTest/0, where TypeParam = int
+[ RUN      ] ATypedDeathTest/0.ShouldRunFirst
+[       OK ] ATypedDeathTest/0.ShouldRunFirst
+[----------] 1 test from ATypedDeathTest/1, where TypeParam = double
+[ RUN      ] ATypedDeathTest/1.ShouldRunFirst
+[       OK ] ATypedDeathTest/1.ShouldRunFirst
+[----------] 1 test from My/ATypeParamDeathTest/0, where TypeParam = int
+[ RUN      ] My/ATypeParamDeathTest/0.ShouldRunFirst
+[       OK ] My/ATypeParamDeathTest/0.ShouldRunFirst
+[----------] 1 test from My/ATypeParamDeathTest/1, where TypeParam = double
+[ RUN      ] My/ATypeParamDeathTest/1.ShouldRunFirst
+[       OK ] My/ATypeParamDeathTest/1.ShouldRunFirst
+[----------] 2 tests from PassingTest
+[ RUN      ] PassingTest.PassingTest1
+[       OK ] PassingTest.PassingTest1
+[ RUN      ] PassingTest.PassingTest2
+[       OK ] PassingTest.PassingTest2
 [----------] 3 tests from FatalFailureTest
 [ RUN      ] FatalFailureTest.FatalFailureInSubroutine
 (expecting a failure that x should be 1)
@@ -440,8 +460,8 @@ Expected non-fatal failure.
 FooEnvironment::TearDown() called.
 gtest_output_test_.cc:#: error: Failed
 Expected fatal failure.
-[==========] 50 tests from 20 test cases ran.
-[  PASSED  ] 14 tests.
+[==========] 57 tests from 26 test cases ran.
+[  PASSED  ] 21 tests.
 [  FAILED  ] 36 tests, listed below:
 [  FAILED  ] FatalFailureTest.FatalFailureInSubroutine
 [  FAILED  ] FatalFailureTest.FatalFailureInNestedSubroutine
@@ -481,18 +501,11 @@ Expected fatal failure.
 [  FAILED  ] ExpectFailureTest.ExpectNonFatalFailureOnAllThreads
 
 36 FAILED TESTS
-The non-test part of the code is expected to have 2 failures.
+  YOU HAVE 1 DISABLED TEST
 
-gtest_output_test_.cc:#: error: Value of: false
-  Actual: false
-Expected: true
-gtest_output_test_.cc:#: error: Value of: 3
-Expected: 2
 Note: Google Test filter = FatalFailureTest.*:LoggingTest.*
 [==========] Running 4 tests from 2 test cases.
 [----------] Global test environment set-up.
-FooEnvironment::SetUp() called.
-BarEnvironment::SetUp() called.
 [----------] 3 tests from FatalFailureTest
 [ RUN      ] FatalFailureTest.FatalFailureInSubroutine
 (expecting a failure that x should be 1)
@@ -527,12 +540,6 @@ gtest_output_test_.cc:#: error: Expected: (3) >= (a[i]), actual: 3 vs 6
 [----------] 1 test from LoggingTest (? ms total)
 
 [----------] Global test environment tear-down
-BarEnvironment::TearDown() called.
-gtest_output_test_.cc:#: error: Failed
-Expected non-fatal failure.
-FooEnvironment::TearDown() called.
-gtest_output_test_.cc:#: error: Failed
-Expected fatal failure.
 [==========] 4 tests from 2 test cases ran. (? ms total)
 [  PASSED  ] 0 tests.
 [  FAILED  ] 4 tests, listed below:
@@ -542,3 +549,27 @@ Expected fatal failure.
 [  FAILED  ] LoggingTest.InterleavingLoggingAndAssertions
 
  4 FAILED TESTS
+  YOU HAVE 1 DISABLED TEST
+
+Note: Google Test filter = *DISABLED_*
+[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from DisabledTestsWarningTest
+[ RUN      ] DisabledTestsWarningTest.DISABLED_AlsoRunDisabledTestsFlagSuppressesWarning
+[       OK ] DisabledTestsWarningTest.DISABLED_AlsoRunDisabledTestsFlagSuppressesWarning
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran.
+[  PASSED  ] 1 test.
+Note: Google Test filter = PassingTest.*
+Note: This is test shard 1 of 2.
+[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from PassingTest
+[ RUN      ] PassingTest.PassingTest2
+[       OK ] PassingTest.PassingTest2
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran.
+[  PASSED  ] 1 test.
+
+  YOU HAVE 1 DISABLED TEST
+

@@ -1,4 +1,4 @@
-// Copyright 2006, Google Inc.
+// Copyright 2009, Google Inc.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -29,38 +29,14 @@
 //
 // Author: wan@google.com (Zhanyong Wan)
 
-// Unit test for Google Test's break-on-failure mode.
-//
-// A user can ask Google Test to seg-fault when an assertion fails, using
-// either the GTEST_BREAK_ON_FAILURE environment variable or the
-// --gtest_break_on_failure flag.  This file is used for testing such
-// functionality.
-//
-// This program will be invoked from a Python unit test.  It is
-// expected to fail.  Don't run it directly.
+// This program is meant to be run by gtest_help_test.py.  Do not run
+// it directly.
 
 #include <gtest/gtest.h>
 
-#if GTEST_OS_WINDOWS
-#include <windows.h>
-#endif
-
-namespace {
-
-// A test that's expected to fail.
-TEST(Foo, Bar) {
-  EXPECT_EQ(2, 3);
-}
-
-}  // namespace
-
-int main(int argc, char **argv) {
-#if GTEST_OS_WINDOWS
-  // Suppresses display of the Windows error dialog upon encountering
-  // a general protection fault (segment violation).
-  SetErrorMode(SEM_NOGPFAULTERRORBOX | SEM_FAILCRITICALERRORS);
-#endif
-  testing::InitGoogleTest(&argc, argv);
-
-  return RUN_ALL_TESTS();
+// When a help flag is specified, this program should skip the tests
+// and exit with 0; otherwise the following test will be executed,
+// causing this program to exit with a non-zero code.
+TEST(HelpFlagTest, ShouldNotBeRun) {
+  ASSERT_TRUE(false) << "Tests shouldn't be run when --help is specified.";
 }

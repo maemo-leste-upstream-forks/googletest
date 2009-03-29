@@ -46,20 +46,15 @@
 // included, or there will be a compiler error.  This trick is to
 // prevent a user from accidentally including gtest-internal-inl.h in
 // his code.
-#define GTEST_IMPLEMENTATION
+#define GTEST_IMPLEMENTATION_ 1
 #include "src/gtest-internal-inl.h"
-#undef GTEST_IMPLEMENTATION
+#undef GTEST_IMPLEMENTATION_
 
-#ifdef GTEST_OS_WINDOWS
 #ifdef _WIN32_WCE
-#include <windows.h>
-#else
-#include <direct.h>
+#include <windows.h>  // NOLINT
+#elif GTEST_OS_WINDOWS
+#include <direct.h>  // NOLINT
 #endif  // _WIN32_WCE
-#define PATH_SEP "\\"
-#else
-#define PATH_SEP "/"
-#endif  // GTEST_OS_WINDOWS
 
 namespace testing {
 namespace internal {
@@ -88,18 +83,21 @@ int _rmdir(const char* path) {
 #ifndef _WIN32_WCE
 
 TEST(GetCurrentDirTest, ReturnsCurrentDir) {
-  EXPECT_FALSE(FilePath::GetCurrentDir().IsEmpty());
+  const FilePath original_dir = FilePath::GetCurrentDir();
+  EXPECT_FALSE(original_dir.IsEmpty());
 
-#ifdef GTEST_OS_WINDOWS
-  _chdir(PATH_SEP);
+#if GTEST_OS_WINDOWS
+  _chdir(GTEST_PATH_SEP_);
   const FilePath cwd = FilePath::GetCurrentDir();
+  _chdir(original_dir.c_str());
   // Skips the ":".
   const char* const cwd_without_drive = strchr(cwd.c_str(), ':');
   ASSERT_TRUE(cwd_without_drive != NULL);
-  EXPECT_STREQ(PATH_SEP, cwd_without_drive + 1);
+  EXPECT_STREQ(GTEST_PATH_SEP_, cwd_without_drive + 1);
 #else
-  chdir(PATH_SEP);
-  EXPECT_STREQ(PATH_SEP, FilePath::GetCurrentDir().c_str());
+  chdir(GTEST_PATH_SEP_);
+  EXPECT_STREQ(GTEST_PATH_SEP_, FilePath::GetCurrentDir().c_str());
+  chdir(original_dir.c_str());
 #endif
 }
 
@@ -131,25 +129,25 @@ TEST(RemoveDirectoryNameTest, ButNoDirectory) {
 // RemoveDirectoryName "/afile" -> "afile"
 TEST(RemoveDirectoryNameTest, RootFileShouldGiveFileName) {
   EXPECT_STREQ("afile",
-      FilePath(PATH_SEP "afile").RemoveDirectoryName().c_str());
+      FilePath(GTEST_PATH_SEP_ "afile").RemoveDirectoryName().c_str());
 }
 
 // RemoveDirectoryName "adir/" -> ""
 TEST(RemoveDirectoryNameTest, WhereThereIsNoFileName) {
   EXPECT_STREQ("",
-      FilePath("adir" PATH_SEP).RemoveDirectoryName().c_str());
+      FilePath("adir" GTEST_PATH_SEP_).RemoveDirectoryName().c_str());
 }
 
 // RemoveDirectoryName "adir/afile" -> "afile"
 TEST(RemoveDirectoryNameTest, ShouldGiveFileName) {
   EXPECT_STREQ("afile",
-      FilePath("adir" PATH_SEP "afile").RemoveDirectoryName().c_str());
+      FilePath("adir" GTEST_PATH_SEP_ "afile").RemoveDirectoryName().c_str());
 }
 
 // RemoveDirectoryName "adir/subdir/afile" -> "afile"
 TEST(RemoveDirectoryNameTest, ShouldAlsoGiveFileName) {
   EXPECT_STREQ("afile",
-      FilePath("adir" PATH_SEP "subdir" PATH_SEP "afile")
+      FilePath("adir" GTEST_PATH_SEP_ "subdir" GTEST_PATH_SEP_ "afile")
       .RemoveDirectoryName().c_str());
 }
 
@@ -158,65 +156,127 @@ TEST(RemoveDirectoryNameTest, ShouldAlsoGiveFileName) {
 TEST(RemoveFileNameTest, EmptyName) {
 #ifdef _WIN32_WCE
   // On Windows CE, we use the root as the current directory.
-  EXPECT_STREQ(PATH_SEP,
+  EXPECT_STREQ(GTEST_PATH_SEP_,
       FilePath("").RemoveFileName().c_str());
 #else
-  EXPECT_STREQ("." PATH_SEP,
+  EXPECT_STREQ("." GTEST_PATH_SEP_,
       FilePath("").RemoveFileName().c_str());
 #endif
 }
 
 // RemoveFileName "adir/" -> "adir/"
 TEST(RemoveFileNameTest, ButNoFile) {
-  EXPECT_STREQ("adir" PATH_SEP,
-      FilePath("adir" PATH_SEP).RemoveFileName().c_str());
+  EXPECT_STREQ("adir" GTEST_PATH_SEP_,
+      FilePath("adir" GTEST_PATH_SEP_).RemoveFileName().c_str());
 }
 
 // RemoveFileName "adir/afile" -> "adir/"
 TEST(RemoveFileNameTest, GivesDirName) {
-  EXPECT_STREQ("adir" PATH_SEP,
-      FilePath("adir" PATH_SEP "afile")
+  EXPECT_STREQ("adir" GTEST_PATH_SEP_,
+      FilePath("adir" GTEST_PATH_SEP_ "afile")
       .RemoveFileName().c_str());
 }
 
 // RemoveFileName "adir/subdir/afile" -> "adir/subdir/"
 TEST(RemoveFileNameTest, GivesDirAndSubDirName) {
-  EXPECT_STREQ("adir" PATH_SEP "subdir" PATH_SEP,
-      FilePath("adir" PATH_SEP "subdir" PATH_SEP "afile")
+  EXPECT_STREQ("adir" GTEST_PATH_SEP_ "subdir" GTEST_PATH_SEP_,
+      FilePath("adir" GTEST_PATH_SEP_ "subdir" GTEST_PATH_SEP_ "afile")
       .RemoveFileName().c_str());
 }
 
 // RemoveFileName "/afile" -> "/"
 TEST(RemoveFileNameTest, GivesRootDir) {
-  EXPECT_STREQ(PATH_SEP,
-      FilePath(PATH_SEP "afile").RemoveFileName().c_str());
+  EXPECT_STREQ(GTEST_PATH_SEP_,
+      FilePath(GTEST_PATH_SEP_ "afile").RemoveFileName().c_str());
 }
 
 
 TEST(MakeFileNameTest, GenerateWhenNumberIsZero) {
   FilePath actual = FilePath::MakeFileName(FilePath("foo"), FilePath("bar"),
       0, "xml");
-  EXPECT_STREQ("foo" PATH_SEP "bar.xml", actual.c_str());
+  EXPECT_STREQ("foo" GTEST_PATH_SEP_ "bar.xml", actual.c_str());
 }
 
 TEST(MakeFileNameTest, GenerateFileNameNumberGtZero) {
   FilePath actual = FilePath::MakeFileName(FilePath("foo"), FilePath("bar"),
       12, "xml");
-  EXPECT_STREQ("foo" PATH_SEP "bar_12.xml", actual.c_str());
+  EXPECT_STREQ("foo" GTEST_PATH_SEP_ "bar_12.xml", actual.c_str());
 }
 
 TEST(MakeFileNameTest, GenerateFileNameWithSlashNumberIsZero) {
-  FilePath actual = FilePath::MakeFileName(FilePath("foo" PATH_SEP),
+  FilePath actual = FilePath::MakeFileName(FilePath("foo" GTEST_PATH_SEP_),
       FilePath("bar"), 0, "xml");
-  EXPECT_STREQ("foo" PATH_SEP "bar.xml", actual.c_str());
+  EXPECT_STREQ("foo" GTEST_PATH_SEP_ "bar.xml", actual.c_str());
 }
 
 TEST(MakeFileNameTest, GenerateFileNameWithSlashNumberGtZero) {
-  FilePath actual = FilePath::MakeFileName(FilePath("foo" PATH_SEP),
+  FilePath actual = FilePath::MakeFileName(FilePath("foo" GTEST_PATH_SEP_),
       FilePath("bar"), 12, "xml");
-  EXPECT_STREQ("foo" PATH_SEP "bar_12.xml", actual.c_str());
+  EXPECT_STREQ("foo" GTEST_PATH_SEP_ "bar_12.xml", actual.c_str());
 }
 
+TEST(MakeFileNameTest, GenerateWhenNumberIsZeroAndDirIsEmpty) {
+  FilePath actual = FilePath::MakeFileName(FilePath(""), FilePath("bar"),
+      0, "xml");
+  EXPECT_STREQ("bar.xml", actual.c_str());
+}
+
+TEST(MakeFileNameTest, GenerateWhenNumberIsNotZeroAndDirIsEmpty) {
+  FilePath actual = FilePath::MakeFileName(FilePath(""), FilePath("bar"),
+      14, "xml");
+  EXPECT_STREQ("bar_14.xml", actual.c_str());
+}
+
+TEST(ConcatPathsTest, WorksWhenDirDoesNotEndWithPathSep) {
+  FilePath actual = FilePath::ConcatPaths(FilePath("foo"),
+                                          FilePath("bar.xml"));
+  EXPECT_STREQ("foo" GTEST_PATH_SEP_ "bar.xml", actual.c_str());
+}
+
+TEST(ConcatPathsTest, WorksWhenPath1EndsWithPathSep) {
+  FilePath actual = FilePath::ConcatPaths(FilePath("foo" GTEST_PATH_SEP_),
+                                          FilePath("bar.xml"));
+  EXPECT_STREQ("foo" GTEST_PATH_SEP_ "bar.xml", actual.c_str());
+}
+
+TEST(ConcatPathsTest, Path1BeingEmpty) {
+  FilePath actual = FilePath::ConcatPaths(FilePath(""),
+                                          FilePath("bar.xml"));
+  EXPECT_STREQ("bar.xml", actual.c_str());
+}
+
+TEST(ConcatPathsTest, Path2BeingEmpty) {
+  FilePath actual = FilePath::ConcatPaths(FilePath("foo"),
+                                          FilePath(""));
+  EXPECT_STREQ("foo" GTEST_PATH_SEP_, actual.c_str());
+}
+
+TEST(ConcatPathsTest, BothPathBeingEmpty) {
+  FilePath actual = FilePath::ConcatPaths(FilePath(""),
+                                          FilePath(""));
+  EXPECT_STREQ("", actual.c_str());
+}
+
+TEST(ConcatPathsTest, Path1ContainsPathSep) {
+  FilePath actual = FilePath::ConcatPaths(FilePath("foo" GTEST_PATH_SEP_ "bar"),
+                                          FilePath("foobar.xml"));
+  EXPECT_STREQ("foo" GTEST_PATH_SEP_ "bar" GTEST_PATH_SEP_ "foobar.xml",
+               actual.c_str());
+}
+
+TEST(ConcatPathsTest, Path2ContainsPathSep) {
+  FilePath actual = FilePath::ConcatPaths(
+      FilePath("foo" GTEST_PATH_SEP_),
+      FilePath("bar" GTEST_PATH_SEP_ "bar.xml"));
+  EXPECT_STREQ("foo" GTEST_PATH_SEP_ "bar" GTEST_PATH_SEP_ "bar.xml",
+               actual.c_str());
+}
+
+TEST(ConcatPathsTest, Path2EndsWithPathSep) {
+  FilePath actual = FilePath::ConcatPaths(FilePath("foo"),
+                                          FilePath("bar" GTEST_PATH_SEP_));
+  EXPECT_STREQ("foo" GTEST_PATH_SEP_ "bar" GTEST_PATH_SEP_, actual.c_str());
+}
 
 // RemoveTrailingPathSeparator "" -> ""
 TEST(RemoveTrailingPathSeparatorTest, EmptyString) {
@@ -232,27 +292,29 @@ TEST(RemoveTrailingPathSeparatorTest, FileNoSlashString) {
 
 // RemoveTrailingPathSeparator "foo/" -> "foo"
 TEST(RemoveTrailingPathSeparatorTest, ShouldRemoveTrailingSeparator) {
-  EXPECT_STREQ("foo",
-      FilePath("foo" PATH_SEP).RemoveTrailingPathSeparator().c_str());
+  EXPECT_STREQ(
+      "foo",
+      FilePath("foo" GTEST_PATH_SEP_).RemoveTrailingPathSeparator().c_str());
 }
 
 // RemoveTrailingPathSeparator "foo/bar/" -> "foo/bar/"
 TEST(RemoveTrailingPathSeparatorTest, ShouldRemoveLastSeparator) {
-  EXPECT_STREQ("foo" PATH_SEP "bar",
-      FilePath("foo" PATH_SEP "bar" PATH_SEP).RemoveTrailingPathSeparator()
-      .c_str());
+  EXPECT_STREQ("foo" GTEST_PATH_SEP_ "bar",
+               FilePath("foo" GTEST_PATH_SEP_ "bar" GTEST_PATH_SEP_)
+               .RemoveTrailingPathSeparator().c_str());
 }
 
 // RemoveTrailingPathSeparator "foo/bar" -> "foo/bar"
 TEST(RemoveTrailingPathSeparatorTest, ShouldReturnUnmodified) {
-  EXPECT_STREQ("foo" PATH_SEP "bar",
-      FilePath("foo" PATH_SEP "bar").RemoveTrailingPathSeparator().c_str());
+  EXPECT_STREQ("foo" GTEST_PATH_SEP_ "bar",
+               FilePath("foo" GTEST_PATH_SEP_ "bar")
+               .RemoveTrailingPathSeparator().c_str());
 }
 
 TEST(DirectoryTest, RootDirectoryExists) {
-#ifdef GTEST_OS_WINDOWS  // We are on Windows.
-  char current_drive[_MAX_PATH];
-  current_drive[0] = _getdrive() + 'A' - 1;
+#if GTEST_OS_WINDOWS  // We are on Windows.
+  char current_drive[_MAX_PATH];  // NOLINT
+  current_drive[0] = static_cast<char>(_getdrive() + 'A' - 1);
   current_drive[1] = ':';
   current_drive[2] = '\\';
   current_drive[3] = '\0';
@@ -262,13 +324,13 @@ TEST(DirectoryTest, RootDirectoryExists) {
 #endif  // GTEST_OS_WINDOWS
 }
 
-#ifdef GTEST_OS_WINDOWS
+#if GTEST_OS_WINDOWS
 TEST(DirectoryTest, RootOfWrongDriveDoesNotExists) {
   const int saved_drive_ = _getdrive();
   // Find a drive that doesn't exist. Start with 'Z' to avoid common ones.
   for (char drive = 'Z'; drive >= 'A'; drive--)
     if (_chdrive(drive - 'A' + 1) == -1) {
-      char non_drive[_MAX_PATH];
+      char non_drive[_MAX_PATH];  // NOLINT
       non_drive[0] = drive;
       non_drive[1] = ':';
       non_drive[2] = '\\';
@@ -278,17 +340,17 @@ TEST(DirectoryTest, RootOfWrongDriveDoesNotExists) {
     }
   _chdrive(saved_drive_);
 }
-#endif // GTEST_OS_WINDOWS
+#endif  // GTEST_OS_WINDOWS
 
 #ifndef _WIN32_WCE
 // Windows CE _does_ consider an empty directory to exist.
 TEST(DirectoryTest, EmptyPathDirectoryDoesNotExist) {
   EXPECT_FALSE(FilePath("").DirectoryExists());
 }
-#endif // ! _WIN32_WCE
+#endif  // ! _WIN32_WCE
 
 TEST(DirectoryTest, CurrentDirectoryExists) {
-#ifdef GTEST_OS_WINDOWS  // We are on Windows.
+#if GTEST_OS_WINDOWS  // We are on Windows.
 #ifndef _WIN32_CE  // Windows CE doesn't have a current directory.
   EXPECT_TRUE(FilePath(".").DirectoryExists());
   EXPECT_TRUE(FilePath(".\\").DirectoryExists());
@@ -306,32 +368,33 @@ TEST(NormalizeTest, NullStringsEqualEmptyDirectory) {
 
 // "foo/bar" == foo//bar" == "foo///bar"
 TEST(NormalizeTest, MultipleConsecutiveSepaparatorsInMidstring) {
-  EXPECT_STREQ("foo" PATH_SEP "bar",
-    FilePath("foo" PATH_SEP "bar").c_str());
-  EXPECT_STREQ("foo" PATH_SEP "bar",
-    FilePath("foo" PATH_SEP PATH_SEP "bar").c_str());
-  EXPECT_STREQ("foo" PATH_SEP "bar",
-    FilePath("foo" PATH_SEP PATH_SEP PATH_SEP "bar").c_str());
+  EXPECT_STREQ("foo" GTEST_PATH_SEP_ "bar",
+               FilePath("foo" GTEST_PATH_SEP_ "bar").c_str());
+  EXPECT_STREQ("foo" GTEST_PATH_SEP_ "bar",
+               FilePath("foo" GTEST_PATH_SEP_ GTEST_PATH_SEP_ "bar").c_str());
+  EXPECT_STREQ("foo" GTEST_PATH_SEP_ "bar",
+               FilePath("foo" GTEST_PATH_SEP_ GTEST_PATH_SEP_
+                        GTEST_PATH_SEP_ "bar").c_str());
 }
 
 // "/bar" == //bar" == "///bar"
 TEST(NormalizeTest, MultipleConsecutiveSepaparatorsAtStringStart) {
-  EXPECT_STREQ(PATH_SEP "bar",
-    FilePath(PATH_SEP "bar").c_str());
-  EXPECT_STREQ(PATH_SEP "bar",
-    FilePath(PATH_SEP PATH_SEP "bar").c_str());
-  EXPECT_STREQ(PATH_SEP "bar",
-    FilePath(PATH_SEP PATH_SEP PATH_SEP "bar").c_str());
+  EXPECT_STREQ(GTEST_PATH_SEP_ "bar",
+    FilePath(GTEST_PATH_SEP_ "bar").c_str());
+  EXPECT_STREQ(GTEST_PATH_SEP_ "bar",
+    FilePath(GTEST_PATH_SEP_ GTEST_PATH_SEP_ "bar").c_str());
+  EXPECT_STREQ(GTEST_PATH_SEP_ "bar",
+    FilePath(GTEST_PATH_SEP_ GTEST_PATH_SEP_ GTEST_PATH_SEP_ "bar").c_str());
 }
 
 // "foo/" == foo//" == "foo///"
 TEST(NormalizeTest, MultipleConsecutiveSepaparatorsAtStringEnd) {
-  EXPECT_STREQ("foo" PATH_SEP,
-    FilePath("foo" PATH_SEP).c_str());
-  EXPECT_STREQ("foo" PATH_SEP,
-    FilePath("foo" PATH_SEP PATH_SEP).c_str());
-  EXPECT_STREQ("foo" PATH_SEP,
-    FilePath("foo" PATH_SEP PATH_SEP PATH_SEP).c_str());
+  EXPECT_STREQ("foo" GTEST_PATH_SEP_,
+    FilePath("foo" GTEST_PATH_SEP_).c_str());
+  EXPECT_STREQ("foo" GTEST_PATH_SEP_,
+    FilePath("foo" GTEST_PATH_SEP_ GTEST_PATH_SEP_).c_str());
+  EXPECT_STREQ("foo" GTEST_PATH_SEP_,
+    FilePath("foo" GTEST_PATH_SEP_ GTEST_PATH_SEP_ GTEST_PATH_SEP_).c_str());
 }
 
 TEST(AssignmentOperatorTest, DefaultAssignedToNonDefault) {
@@ -362,7 +425,7 @@ class DirectoryCreationTest : public Test {
   virtual void SetUp() {
     testdata_path_.Set(FilePath(String::Format("%s%s%s",
         TempDir().c_str(), GetCurrentExecutableName().c_str(),
-        "_directory_creation" PATH_SEP "test" PATH_SEP)));
+        "_directory_creation" GTEST_PATH_SEP_ "test" GTEST_PATH_SEP_)));
     testdata_file_.Set(testdata_path_.RemoveTrailingPathSeparator());
 
     unique_file0_.Set(FilePath::MakeFileName(testdata_path_, FilePath("unique"),
@@ -373,7 +436,7 @@ class DirectoryCreationTest : public Test {
     remove(testdata_file_.c_str());
     remove(unique_file0_.c_str());
     remove(unique_file1_.c_str());
-#ifdef GTEST_OS_WINDOWS
+#if GTEST_OS_WINDOWS
     _rmdir(testdata_path_.c_str());
 #else
     rmdir(testdata_path_.c_str());
@@ -384,7 +447,7 @@ class DirectoryCreationTest : public Test {
     remove(testdata_file_.c_str());
     remove(unique_file0_.c_str());
     remove(unique_file1_.c_str());
-#ifdef GTEST_OS_WINDOWS
+#if GTEST_OS_WINDOWS
     _rmdir(testdata_path_.c_str());
 #else
     rmdir(testdata_path_.c_str());
@@ -395,7 +458,7 @@ class DirectoryCreationTest : public Test {
 #ifdef _WIN32_WCE
     return String("\\temp\\");
 
-#elif defined(GTEST_OS_WINDOWS)
+#elif GTEST_OS_WINDOWS
     // MSVC 8 deprecates getenv(), so we want to suppress warning 4996
     // (deprecated function) there.
 #pragma warning(push)          // Saves the current warning state.
@@ -415,7 +478,7 @@ class DirectoryCreationTest : public Test {
   }
 
   void CreateTextFile(const char* filename) {
-#ifdef GTEST_OS_WINDOWS
+#if GTEST_OS_WINDOWS
     // MSVC 8 deprecates fopen(), so we want to suppress warning 4996
     // (deprecated function) there.#pragma warning(push)
 #pragma warning(push)          // Saves the current warning state.
@@ -526,11 +589,24 @@ TEST(FilePathTest, RemoveExtensionWhenThereIsNoExtension) {
 
 TEST(FilePathTest, IsDirectory) {
   EXPECT_FALSE(FilePath("cola").IsDirectory());
-  EXPECT_TRUE(FilePath("koala" PATH_SEP).IsDirectory());
+  EXPECT_TRUE(FilePath("koala" GTEST_PATH_SEP_).IsDirectory());
+}
+
+TEST(FilePathTest, IsAbsolutePath) {
+  EXPECT_FALSE(FilePath("is" GTEST_PATH_SEP_ "relative").IsAbsolutePath());
+  EXPECT_FALSE(FilePath("").IsAbsolutePath());
+#if GTEST_OS_WINDOWS
+  EXPECT_TRUE(FilePath("c:\\" GTEST_PATH_SEP_ "is_not"
+                       GTEST_PATH_SEP_ "relative").IsAbsolutePath());
+  EXPECT_FALSE(FilePath("c:foo" GTEST_PATH_SEP_ "bar").IsAbsolutePath());
+#else
+  EXPECT_TRUE(FilePath(GTEST_PATH_SEP_ "is_not" GTEST_PATH_SEP_ "relative")
+              .IsAbsolutePath());
+#endif  // GTEST_OS_WINDOWS
 }
 
 }  // namespace
 }  // namespace internal
 }  // namespace testing
 
-#undef PATH_SEP
+#undef GTEST_PATH_SEP_

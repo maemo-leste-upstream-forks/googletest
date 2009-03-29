@@ -103,12 +103,14 @@ def TestEnvVarAffectsFlag(command):
   TestFlag(command, 'output', 'tmp/foo.xml', '')
   TestFlag(command, 'print_time', '1', '0')
   TestFlag(command, 'repeat', '999', '1')
+  TestFlag(command, 'throw_on_failure', '1', '0')
 
   if IS_WINDOWS:
     TestFlag(command, 'catch_exceptions', '1', '0')
   if IS_LINUX:
     TestFlag(command, 'stack_trace_depth', '0', '100')
     TestFlag(command, 'death_test_style', 'thread-safe', 'fast')
+    TestFlag(command, 'death_test_use_fork', '1', '0')
 
 
 if IS_WINDOWS:
