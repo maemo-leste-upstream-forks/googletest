@@ -3,8 +3,9 @@ gtest (1.3.0-1) unstable; urgency=low
   * [d9b99fd] New Upstream Version 1.3.0
   * [c138a66] Added libgtest0 symbols file for i386 arch
   * [7880f06] Updated to standards version 3.8.1 (No changes needed)
+  * [8311a82] debian/control: Use the new dh_auto_configure
 
- -- Giuseppe Iuculano <giuseppe@iuculano.it>  Sun, 29 Mar 2009 17:05:55 +0200
+ -- Giuseppe Iuculano <giuseppe@iuculano.it>  Sun, 29 Mar 2009 20:07:11 +0200
 
 gtest (1.2.1-1) unstable; urgency=low
 
