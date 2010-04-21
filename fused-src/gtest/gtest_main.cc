@@ -1,4 +1,4 @@
-// Copyright 2008, Google Inc.
+// Copyright 2006, Google Inc.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -26,34 +26,14 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Author: preston.a.jackson@gmail.com (Preston Jackson)
-//
-// Google Test - FrameworkSample
-// widget.h
-//
 
-// Widget is a very simple class used for demonstrating the use of gtest. It
-// simply stores two values a string and an integer, which are returned via
-// public accessors in multiple forms.
+#include <iostream>
 
-#import <string>
+#include <gtest/gtest.h>
 
-class Widget {
- public:
-  Widget(int number, const std::string& name);
-  ~Widget();
+int main(int argc, char **argv) {
+  std::cout << "Running main() from gtest_main.cc\n";
 
-  // Public accessors to number data
-  float GetFloatValue() const;
-  int GetIntValue() const;
-
-  // Public accessors to the string data
-  std::string GetStringValue() const;
-  void GetCharPtrValue(char* buffer, size_t max_size) const;
-
- private:
-  // Data members
-  float number_;
-  std::string name_;
-};
+  testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}
