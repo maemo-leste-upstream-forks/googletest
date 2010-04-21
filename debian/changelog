@@ -1,3 +1,12 @@
+gtest (1.5.0-1) unstable; urgency=low
+
+  * [5b03f3e] Imported Upstream version 1.5.0
+  * [22d9d7e] Updated i386 symbols file
+  * [b7e31c3] Bump to Standards-Version 3.8.4, no changes needed
+  * [dab6526] Switch to dpkg-source 3.0 (quilt) format
+
+ -- Giuseppe Iuculano <iuculano@debian.org>  Wed, 21 Apr 2010 10:58:20 +0200
+
 gtest (1.4.0-1) unstable; urgency=low
 
   * [ab9eec3] debian/control: Add python to Build-Depends and fix FTBFS
