@@ -1,3 +1,16 @@
+gtest (1.5.0-2) unstable; urgency=low
+
+  * patches/fix-linking.patch: New.  Add libgtest.la to LDADD for
+    sample1_unittest and gtest_all_test.  Closes: #554748.
+
+  * control:
+  * rules: Rewrite rules to build using dh with autoreconf.  Build-depend
+    on libtool (for libtoolize).
+
+  * control: Use debhelper v8.
+
+ -- Steve M. Robbins <smr@debian.org>  Sun, 20 Mar 2011 12:52:20 -0500
+
 gtest (1.5.0-1) unstable; urgency=low
 
   * [5b03f3e] Imported Upstream version 1.5.0
