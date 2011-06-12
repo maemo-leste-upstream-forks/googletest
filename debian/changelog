@@ -2,10 +2,11 @@ gtest (1.6.0-1) unstable; urgency=low
 
   * New upstream.  Closes: #630188.
     patches/fix-linking.patch: Remove.
-  
+
   * rules:
   * control: Switch to cmake (upstream deprecated autoconf build).  Build
-    only static library (remove libgtest0 package).
+    only static library (remove libgtest0 package).  Install full source
+    and example files.
 
  -- Steve M. Robbins <smr@debian.org>  Sun, 12 Jun 2011 10:58:03 -0500
 
