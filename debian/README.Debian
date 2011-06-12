@@ -1,0 +1,5 @@
+Upstream does not recommend to use generic libraries.
+See /usr/src/gtest for gtest source code.
+See example Makefile to use it.
+
+ -- Steve M. Robbins <smr@debian.org>, Sun, 12 Jun 2011 11:24:25 -0500
