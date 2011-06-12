@@ -14,7 +14,7 @@
 
 # Points to the root of Google Test, relative to where this file is.
 # Remember to tweak this if you move this file.
-GTEST_DIR = ..
+GTEST_DIR = /usr/src/gtest
 
 # Where to find user code.
 USER_DIR = ../samples
@@ -31,8 +31,8 @@ TESTS = sample1_unittest
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
-GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
-                $(GTEST_DIR)/include/gtest/internal/*.h
+GTEST_HEADERS = /usr/include/gtest/*.h \
+                /usr/include/gtest/internal/*.h
 
 # House-keeping build targets.
 
