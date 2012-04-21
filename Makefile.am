@@ -238,7 +238,7 @@ TESTS += samples/sample1_unittest
 check_PROGRAMS += samples/sample1_unittest
 samples_sample1_unittest_SOURCES = samples/sample1_unittest.cc
 samples_sample1_unittest_LDADD = lib/libgtest_main.la \
-				 lib/libgtest.la \
+                                 lib/libgtest.la \
                                  samples/libsamples.la
 
 # Another sample.  It also verifies that libgtest works.
