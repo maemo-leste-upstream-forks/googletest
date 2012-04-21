@@ -1,3 +1,10 @@
+gtest (1.6.0-2) unstable; urgency=low
+
+  * libgtest-dev.install: Do not ship static libs (closes: #662989).  Ship
+    CMakeLists.txt to build lib (closes: #666438).
+
+ -- Steve M. Robbins <smr@debian.org>  Sat, 21 Apr 2012 16:10:45 -0500
+
 gtest (1.6.0-1) unstable; urgency=low
 
   * New upstream.  Closes: #630188.
