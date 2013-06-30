@@ -1,3 +1,9 @@
+gtest (1.7.0~svn2013-06-29-1) unstable; urgency=low
+
+  * New upstream snapshot.
+
+ -- Steve M. Robbins <smr@debian.org>  Sat, 29 Jun 2013 20:49:58 -0500
+
 gtest (1.6.0-2) unstable; urgency=low
 
   * libgtest-dev.install: Do not ship static libs (closes: #662989).
