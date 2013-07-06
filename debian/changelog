@@ -1,3 +1,10 @@
+gtest (1.7.0~svn20130629-2) unstable; urgency=low
+
+  * patches/death-test-test.patch: New.  Fix build failures on arches that
+    don't support death tests; e.g. hurd and kfreebsd.
+
+ -- Steve M. Robbins <smr@debian.org>  Sat, 06 Jul 2013 14:08:21 -0500
+
 gtest (1.7.0~svn20130629-1) unstable; urgency=low
 
   * New upstream, snapshot of upcoming v 1.7.0.
