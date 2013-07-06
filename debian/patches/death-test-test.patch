@@ -1,0 +1,28 @@
+Description: Make death tests conditional
+ Upstream change in revision r606 added two death tests that should
+ have been included in the conditionally-compiled section. 
+Author: Steve M. Robbins <smr@debian.org>
+Forwarded: not yet
+Last-Update: 2013-07-06
+
+
+--- alioth.orig/test/gtest-death-test_test.cc
++++ alioth/test/gtest-death-test_test.cc
+@@ -1341,6 +1341,8 @@
+ #endif  // _MSC_VER
+ }
+ 
++#if GTEST_HAS_DEATH_TEST
++
+ TEST(InDeathTestChildDeathTest, ReportsDeathTestCorrectlyInFastStyle) {
+   testing::GTEST_FLAG(death_test_style) = "fast";
+   EXPECT_FALSE(InDeathTestChild());
+@@ -1361,6 +1363,8 @@
+   }, "Inside");
+ }
+ 
++#endif
++
+ // Tests that a test case whose name ends with "DeathTest" works fine
+ // on Windows.
+ TEST(NotADeathTest, Test) {
