@@ -1,4 +1,4 @@
-// Copyright 2009, Google Inc.
+// Copyright 2006, Google Inc.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -26,15 +26,13 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Author: Josh Kelley (joshkel@gmail.com)
-//
-// Google C++ Testing Framework (Google Test)
-//
-// Links gtest.lib and gtest_main.lib into the current project in C++Builder.
-// This means that these libraries can't be renamed, but it's the only way to
-// ensure that Debug versus Release test builds are linked against the
-// appropriate Debug or Release build of the libraries.
 
-#pragma link "gtest.lib"
-#pragma link "gtest_main.lib"
+#include <stdio.h>
+
+#include "gtest/gtest.h"
+
+GTEST_API_ int main(int argc, char **argv) {
+  printf("Running main() from gtest_main.cc\n");
+  testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}
