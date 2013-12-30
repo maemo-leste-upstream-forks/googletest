@@ -1,3 +1,11 @@
+gtest (1.7.0-1) unstable; urgency=low
+
+  * New upstream.
+
+  * patches/death-test-test.patch: Remove.  Issue fixed upstream.
+
+ -- Steve M. Robbins <smr@debian.org>  Sun, 29 Dec 2013 01:06:51 -0600
+
 gtest (1.7.0~svn20130629-2) unstable; urgency=low
 
   * patches/death-test-test.patch: New.  Fix build failures on arches that
