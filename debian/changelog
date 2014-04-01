@@ -3,7 +3,7 @@ gtest (1.7.0-2) unstable; urgency=medium
   * [68e512e] Make death tests conditional on GTEST_HAS_DEATH_TEST.
     (Closes: #738437)
 
- -- Steven M. Robbins <smr@debian.org>  Mon, 31 Mar 2014 22:10:54 -0500
+ -- Steve M. Robbins <smr@debian.org>  Mon, 31 Mar 2014 22:10:54 -0500
 
 gtest (1.7.0-1) unstable; urgency=low
 
