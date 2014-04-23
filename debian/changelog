@@ -1,3 +1,9 @@
+gtest (1.7.0-3) unstable; urgency=medium
+
+  * [646cfdf] Mark -dev package as Multi-Arch: same.  Closes: #745579.
+
+ -- Steve M. Robbins <smr@debian.org>  Tue, 22 Apr 2014 21:54:49 -0500
+
 gtest (1.7.0-2) unstable; urgency=medium
 
   * [68e512e] Make death tests conditional on GTEST_HAS_DEATH_TEST.
