@@ -1,8 +1,8 @@
 Description: Make death tests conditional
  Two tests should have been included in the conditionally-compiled section. 
 Author: Steve M. Robbins <smr@debian.org>
-Forwarded: not yet
-Last-Update: 2013-03-31
+Forwarded: https://groups.google.com/forum/#!topic/googletestframework/c595nuPdiNo
+Last-Update: 2013-04-21
 
 --- alioth.orig/test/gtest-death-test_test.cc
 +++ alioth/test/gtest-death-test_test.cc
