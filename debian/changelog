@@ -1,3 +1,10 @@
+gtest (1.7.0-4) unstable; urgency=medium
+
+  * patches/gtest-freebsd-death-test.patch: New.  Enable death tests for
+    FreeBSD.  Closes: #789186
+
+ -- Steve M. Robbins <smr@debian.org>  Tue, 23 Jun 2015 22:18:22 -0500
+
 gtest (1.7.0-3) unstable; urgency=medium
 
   * [646cfdf] Mark -dev package as Multi-Arch: same.  Closes: #745579.
