@@ -3,10 +3,10 @@ Description: Configure example Makefile for installed gtest
  includes.
 Author: Steve M. Robbins <smr@debian.org>
 Forwarded: not-needed
-Last-Update: 2012-04-21
+Last-Update: 2016-08-16
 
---- gtest-1.6.0.orig/make/Makefile
-+++ gtest-1.6.0/make/Makefile
+--- gtest-1.6.0.orig/googletest/make/Makefile
++++ gtest-1.6.0/googletest/make/Makefile
 @@ -14,7 +14,7 @@
  
  # Points to the root of Google Test, relative to where this file is.
