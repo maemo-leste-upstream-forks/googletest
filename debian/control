@@ -1,4 +1,4 @@
-Source: gtest
+Source: googletest
 Homepage: http://code.google.com/p/googletest/
 Section: devel
 Maintainer: Steve M. Robbins <smr@debian.org>
