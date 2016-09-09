@@ -1,6 +1,9 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
 
+# Build with no optimization; otherwise test gtest_catch_exceptions_test will segfault.
+DEB_BUILD_OPTIONS=noopt
+
 %:
 	dh $@ --parallel
 
