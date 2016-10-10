@@ -1,4 +1,0 @@
-googletest/include/gtest usr/include
-googletest/src usr/src/gtest
-googletest/CMakeLists.txt usr/src/gtest
-googletest/cmake usr/src/gtest

@@ -1,3 +1,14 @@
+googletest (1.8.0-1) unstable; urgency=medium
+
+  Upstream has merged formerly-separate Google Test and Google Mock
+  projects.  The binary package googletest reflects this merge: sources
+  for both projects are now installed under /usr/src/googletest.
+
+  The old packages libgtest-dev and google-mock are retained for
+  compatibility and provide the old /usr/src/gtest and /usr/src/gmock
+  via symlinks.
+
+
 gtest (1.6.0-1) unstable; urgency=low
   
   Use of precompiled libgtest is no longer recommended.  See README.Debian

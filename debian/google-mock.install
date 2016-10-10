@@ -1,5 +1,0 @@
-googlemock/scripts/generator/gmock_gen.py usr/bin
-googlemock/scripts/generator/cpp usr/share/gmock/
-googlemock/CMakeLists.txt usr/src/gmock
-googlemock/include/gmock usr/include
-googlemock/src/*.cc usr/src/gmock/src/
