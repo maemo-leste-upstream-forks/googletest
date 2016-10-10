@@ -10,6 +10,13 @@ DEB_BUILD_OPTIONS=noopt
 override_dh_auto_configure:
 	dh_auto_configure --buildsystem=cmake -- -Dgmock_build_tests=ON -Dgtest_build_tests=ON
 
+override_dh_install:
+	dh_install
+	for f in $$(ls debian/google-mock/usr/bin/*.py); \
+	  do mv $$f $$(echo $$f | sed s/\.py//); \
+	done
+	chmod a-x debian/google-mock/usr/share/gmock/cpp/*
+
 
 override_dh_clean:
 	dh_clean

@@ -1,8 +1,12 @@
 googletest (1.8.0-1) unstable; urgency=medium
 
-  * New upstream.
+  * New upstream release 1.8.0.  This release includes both google test
+    and google mock.  Closes: #835487, #835486.
+    - Builds with GCC-6.  Closes: #823447, #83363.
+  * libgtest-dev: Description warns that library must be built from
+    provided sources.  Closes: #802587.
 
- -- Steve M. Robbins <smr@debian.org>  Mon, 05 Sep 2016 20:51:36 -0500
+ -- Steve M. Robbins <smr@debian.org>  Mon, 10 Oct 2016 01:25:49 -0500
 
 gtest (1.7.0-4) unstable; urgency=medium
 

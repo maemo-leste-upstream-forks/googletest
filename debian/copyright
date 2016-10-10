@@ -1,7 +1,7 @@
 Format-Specification:
     http://wiki.debian.org/Proposals/CopyrightFormat?action=recall&rev=143
 Upstream-Name: Google C++ Testing Framework
-Upstream-Source: http://code.google.com/p/googletest/
+Upstream-Source: https://github.com/google/googletest
 
 Files: *
 Copyright: Copyright 2008, Google Inc.

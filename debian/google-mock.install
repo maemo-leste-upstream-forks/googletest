@@ -1,4 +1,4 @@
-googlemock/scripts/generator/gmock_gen.py usr/bin/gmock_gen
+googlemock/scripts/generator/gmock_gen.py usr/bin
 googlemock/scripts/generator/cpp usr/share/gmock/
 googlemock/CMakeLists.txt usr/src/gmock
 googlemock/include/gmock usr/include

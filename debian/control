@@ -1,11 +1,11 @@
 Source: googletest
-Homepage: http://code.google.com/p/googletest/
+Homepage: https://github.com/google/googletest
 Section: devel
 Maintainer: Steve M. Robbins <smr@debian.org>
-Uploaders: Steve M. Robbins <smr@debian.org>, Giuseppe Iuculano <iuculano@debian.org>, Fredrik Hallenberg <hallon@debian.org>
+Uploaders: Giuseppe Iuculano <iuculano@debian.org>, Fredrik Hallenberg <hallon@debian.org>
 Priority: optional
 Build-Depends: debhelper (>= 9), cmake, python
-Standards-Version: 3.9.5
+Standards-Version: 3.9.8
 Vcs-Git: git://git.debian.org/git/collab-maint/gtest.git
 Vcs-Browser: http://git.debian.org/?p=collab-maint/gtest.git
 
@@ -14,15 +14,16 @@ Architecture: any
 Multi-Arch: same
 Section: libdevel
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Google's framework for writing C++ tests - header files
+Description: Google's framework for writing C++ tests [source code]
  Google's framework for writing C++ tests on a variety of platforms. Based on
  the xUnit architecture. Supports automatic test discovery, a rich set of
  assertions, user-defined assertions, death tests, fatal and non-fatal failures,
  value- and type-parameterized tests, various options for running the tests, and
  XML test report generation.
  .
- This package contains the header files needed to link programs against
- gtest.
+ NOTE: This package does not contain a library to link against, but rather
+ the source code to build the google test library; this is because the google
+ test library must be built with the same flags as the C++ code under test.
 
 Package: google-mock
 Architecture: any
