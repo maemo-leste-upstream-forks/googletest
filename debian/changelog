@@ -6,7 +6,7 @@ googletest (1.8.0-1) unstable; urgency=medium
   * libgtest-dev: Description warns that library must be built from
     provided sources.  Closes: #802587.
 
- -- Steve M. Robbins <smr@debian.org>  Mon, 10 Oct 2016 03:20:56 -0500
+ -- Steve M. Robbins <smr@debian.org>  Fri, 11 Nov 2016 16:23:19 -0600
 
 gtest (1.7.0-4) unstable; urgency=medium
 
