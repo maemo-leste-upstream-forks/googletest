@@ -14,6 +14,8 @@ Architecture: any
 Multi-Arch: same
 Section: libdevel
 Depends: ${shlibs:Depends}, ${misc:Depends}, python:any
+Conflicts: libgtest-dev (<< 1.8.0), google-mock (<< 1.8.0)
+Replaces: libgtest-dev (<< 1.8.0), google-mock (<< 1.8.0)
 Description: Google's C++ test framework
  This package combines formerly-separate Google Test and Google Mock.
  .
