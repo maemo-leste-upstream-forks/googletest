@@ -20,7 +20,6 @@ override_dh_install:
 	done
 	chmod a-x debian/googletest/usr/share/gmock/cpp/*
 
-
 override_dh_clean:
 	dh_clean
 	rm -f test/*.pyc
