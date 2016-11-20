@@ -1,0 +1,3 @@
+dpkg-maintscript-helper dir_to_symlink \
+    /usr/src/gtest /usr/src/googletest/googletest \
+    1.8.0-1 -- "$@"

@@ -1,3 +1,9 @@
+googletest (1.8.0-2) unstable; urgency=medium
+
+  * Change /usr/src/gtest directory to symlink on upgrade.
+
+ -- Steve M. Robbins <smr@debian.org>  Sat, 19 Nov 2016 21:07:40 -0600
+
 googletest (1.8.0-1) unstable; urgency=medium
 
   * New upstream release 1.8.0.  This release includes both google test
