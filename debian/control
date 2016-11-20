@@ -6,8 +6,8 @@ Uploaders: Giuseppe Iuculano <iuculano@debian.org>, Fredrik Hallenberg <hallon@d
 Priority: optional
 Build-Depends: debhelper (>= 9), cmake, python
 Standards-Version: 3.9.8
-Vcs-Git: git://git.debian.org/git/collab-maint/gtest.git
-Vcs-Browser: http://git.debian.org/?p=collab-maint/gtest.git
+Vcs-Git: git://anonscm.debian.org/collab-maint/gtest.git
+Vcs-Browser: https://anonscm.debian.org/gitweb/?p=collab-maint/gtest.git
 
 Package: googletest
 Architecture: any
