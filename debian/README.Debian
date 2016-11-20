@@ -12,33 +12,32 @@ using precompiled libraries [1].
 	-----------------------------
 
 See the upstream README for instructions on using gtest with your
-project.  The sources for libgtest are installed into /usr/src/gtest
-along with CMakeLists.txt for use with cmake.
+project.  The sources for libgtest are installed into
+/usr/src/googletest/googletest along with CMakeLists.txt for use with
+cmake.
 
-See /usr/share/doc/libgtest-dev/examples for a complete example 
-including a sample makefile.
-
-If your build system uses CMake, the ExternalProject command
-can be used to build gtest, then FindGTest can be used to
-find the built library.
+If your build system uses CMake, the ExternalProject command can be
+used to build gtest, then FindGTest can be used to find the built
+library.
 
 
 	Using gmock with your project
 	-----------------------------
 
 See the upstream README for instructions on using gmock with your
-project.  The sources for libgmock are installed into /usr/src/gmock.
+project.  The sources for libgmock are installed into
+/usr/src/googletest/googlemock along with CMakeLists.txt for use with
+cmake.
 
 With this Debian package something like the following should be enough to build 
 a static library (which also includes gtest):
 
-g++ -I/usr/src/gmock -c /usr/src/gmock/src/gmock-all.cc
-g++ -I/usr/src/gtest -c /usr/src/gtest/src/gtest-all.cc
+g++ -I/usr/src/googletest/googlemock -c /usr/src/googletest/googlemock/src/gmock-all.cc
+g++ -I/usr/src/googletest/googletest -c /usr/src/googletest/googletest/src/gtest-all.cc
 ar -rv libgmock.a gmock-all.o gtest-all.o
-
 
 
 
 [1] http://groups.google.com/group/googletestframework/browse_thread/thread/668eff1cebf5309d
 
- -- Steve M. Robbins <smr@debian.org>, Mon, 10 Oct 2016 01:17:25 -0500
+ -- Steve M. Robbins <smr@debian.org>, Sat, 19 Nov 2016 21:58:04 -0600
