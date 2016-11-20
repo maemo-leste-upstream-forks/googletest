@@ -1,8 +1,9 @@
 googletest (1.8.0-2) unstable; urgency=medium
 
-  * Change /usr/src/gtest directory to symlink on upgrade.
+  * Use dpkg-maintscript-helper to change directories /usr/src/gtest and
+    gmock to symlinks on upgrade.  Closes: #844721.
 
- -- Steve M. Robbins <smr@debian.org>  Sat, 19 Nov 2016 21:07:40 -0600
+ -- Steve M. Robbins <smr@debian.org>  Sat, 19 Nov 2016 21:43:25 -0600
 
 googletest (1.8.0-1) unstable; urgency=medium
 
