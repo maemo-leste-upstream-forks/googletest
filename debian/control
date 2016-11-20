@@ -46,7 +46,10 @@ Description: Google's C++ test framework
   - lets a user extend it by defining new matchers and actions.
   - does not use exceptions, and
   - is easy to learn and use.
-
+ .
+ NOTE: This package does not contain a library to link against, but rather
+ the source code to build the google test library; this is because the google
+ test library must be built with the same flags as the C++ code under test.
 
 Package: libgtest-dev
 Architecture: any
@@ -54,21 +57,23 @@ Multi-Arch: same
 Section: libdevel
 Depends: ${misc:Depends}, googletest (= ${binary:Version})
 Description: Google's framework for writing C++ tests [source code]
+ NOTE: This is a transitional package, retained for backwards compatibility.
+ New code should use package googletest instead.
+ .
  Google's framework for writing C++ tests on a variety of platforms. Based on
  the xUnit architecture. Supports automatic test discovery, a rich set of
  assertions, user-defined assertions, death tests, fatal and non-fatal failures,
  value- and type-parameterized tests, various options for running the tests, and
  XML test report generation.
- .
- NOTE: This package does not contain a library to link against, but rather
- the source code to build the google test library; this is because the google
- test library must be built with the same flags as the C++ code under test.
 
 Package: google-mock
 Architecture: any
 Multi-Arch: same
 Depends: ${misc:Depends}, googletest (= ${binary:Version})
 Description: Google's framework for writing and using C++ mock classes
+ NOTE: This is a transitional package, retained for backwards compatibility.
+ New code should use package googletest instead.
+ .
  Inspired by jMock, EasyMock, and Hamcrest, and designed with C++'s 
  specifics in mind, it can help you derive better designs of your 
  system and write better tests.
