@@ -4,6 +4,21 @@
 # Build with no optimization; otherwise test gtest_catch_exceptions_test will segfault.
 DEB_BUILD_OPTIONS=noopt
 
+DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
+
+ifeq ($(DEB_HOST_ARCH),hppa)
+CXXFLAGS += -mlong-calls
+else ifeq ($(DEB_BUILD_ARCH), mips)
+CXXFLAGS += -mxgot
+else ifeq ($(DEB_BUILD_ARCH), mips64el)
+CXXFLAGS += -mxgot
+else ifeq ($(DEB_BUILD_ARCH), mipsel)
+CXXFLAGS += -mxgot
+endif
+
+export CXXFLAGS
+
+
 %:
 	dh $@ --parallel
 

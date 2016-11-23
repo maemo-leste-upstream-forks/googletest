@@ -1,3 +1,10 @@
+googletest (1.8.0-3) unstable; urgency=medium
+
+  * Build using -mxgot for mips*.
+  * Build using -mlong-calls for hppa.  Closes: #845274.
+
+ -- Steve M. Robbins <smr@debian.org>  Tue, 22 Nov 2016 22:39:22 -0600
+
 googletest (1.8.0-2) unstable; urgency=medium
 
   * Use dpkg-maintscript-helper to change directories /usr/src/gtest and
