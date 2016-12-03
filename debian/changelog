@@ -1,3 +1,10 @@
+googletest (1.8.0-4) UNRELEASED; urgency=medium
+
+  * Fix for building with -D_GLIBCXX_USE_C99_FP_MACROS_DYNAMIC.
+    Closes: #846254.
+
+ -- Steve M. Robbins <smr@debian.org>  Fri, 02 Dec 2016 20:51:01 -0600
+
 googletest (1.8.0-3) unstable; urgency=medium
 
   * Build using -mxgot for mips*.
