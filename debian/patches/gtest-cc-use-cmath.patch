@@ -1,0 +1,15 @@
+Fix for https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=846254
+
+diff --git a/googletest/src/gtest.cc b/googletest/src/gtest.cc
+index d882ab2..2bc72c2 100644
+--- a/googletest/src/gtest.cc
++++ b/googletest/src/gtest.cc
+@@ -36,7 +36,7 @@
+ #include "gtest/gtest-spi.h"
+ 
+ #include <ctype.h>
+-#include <math.h>
++#include <cmath>
+ #include <stdarg.h>
+ #include <stdio.h>
+ #include <stdlib.h>
