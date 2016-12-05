@@ -54,7 +54,8 @@ Description: Google's C++ test framework
 Package: libgtest-dev
 Architecture: any
 Multi-Arch: same
-Section: libdevel
+Section: oldlibs
+Priority: extra
 Depends: ${misc:Depends}, googletest (= ${binary:Version})
 Description: Google's framework for writing C++ tests [source code]
  NOTE: This is a transitional package, retained for backwards compatibility.
@@ -69,6 +70,8 @@ Description: Google's framework for writing C++ tests [source code]
 Package: google-mock
 Architecture: any
 Multi-Arch: same
+Section: oldlibs
+Priority: extra
 Depends: ${misc:Depends}, googletest (= ${binary:Version})
 Description: Google's framework for writing and using C++ mock classes
  NOTE: This is a transitional package, retained for backwards compatibility.
