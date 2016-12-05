@@ -1,11 +1,11 @@
-googletest (1.8.0-4) UNRELEASED; urgency=medium
+googletest (1.8.0-4) unstable; urgency=medium
 
   * Fix for building with -D_GLIBCXX_USE_C99_FP_MACROS_DYNAMIC.
     Closes: #846254.
 
   * rules: ensure the dpkg-supplied hardening flags are not suppressed.
 
- -- Steve M. Robbins <smr@debian.org>  Sun, 04 Dec 2016 21:13:58 -0600
+ -- Steve M. Robbins <smr@debian.org>  Sun, 04 Dec 2016 21:16:58 -0600
 
 googletest (1.8.0-3) unstable; urgency=medium
 
