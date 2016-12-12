@@ -1,3 +1,4 @@
 py_test-fix.patch
 makefile-example.patch
 gtest-cc-use-cmath.patch
+m68k-disable-getthreadcounttest.patch

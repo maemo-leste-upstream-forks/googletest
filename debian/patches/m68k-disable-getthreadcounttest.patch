@@ -1,0 +1,17 @@
+Fix for https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=846464
+The m68k kernel seems to be reporting always 0 threads, so we
+disable the test.  See https://lists.debian.org/debian-68k/2016/12/msg00029.html
+
+diff --git a/googletest/test/gtest-port_test.cc b/googletest/test/gtest-port_test.cc
+index 6ea607b..9488619 100644
+--- a/googletest/test/gtest-port_test.cc
++++ b/googletest/test/gtest-port_test.cc
+@@ -304,7 +304,7 @@ TEST(FormatCompilerIndependentFileLocationTest, FormatsUknownFileAndLine) {
+   EXPECT_EQ("unknown file", FormatCompilerIndependentFileLocation(NULL, -1));
+ }
+ 
+-#if GTEST_OS_LINUX || GTEST_OS_MAC || GTEST_OS_QNX
++#if (GTEST_OS_LINUX && !defined(__m68k__)) || GTEST_OS_MAC || GTEST_OS_QNX
+ void* ThreadFunc(void* data) {
+   internal::Mutex* mutex = static_cast<internal::Mutex*>(data);
+   mutex->Lock();
