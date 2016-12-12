@@ -25,7 +25,9 @@ override_dh_auto_configure:
 
 # Exclude test that fails when optimization enabled
 override_dh_auto_test:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 	cd obj-* && ctest --exclude-regex gtest_catch_exceptions_test
+endif
 
 override_dh_install:
 	dh_install
