@@ -1,3 +1,13 @@
+googletest (1.8.0-5) unstable; urgency=medium
+
+  * [ccfd8af] Honor "nocheck" in DEB_BUILD_OPTIONS.
+  * [ac3dbab] Emit content of LastTest.log if test fails.
+  * [519f537] New patch to disable test for GetThreadCount() on m68k;
+    testing indicates the kernel is always returning 0 threads.
+    Closes: #846464.
+
+ -- Steve M. Robbins <smr@debian.org>  Sun, 11 Dec 2016 22:01:20 -0600
+
 googletest (1.8.0-4) unstable; urgency=medium
 
   * Fix for building with -D_GLIBCXX_USE_C99_FP_MACROS_DYNAMIC.
