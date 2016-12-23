@@ -1,3 +1,17 @@
+googletest (1.8.0-6) unstable; urgency=medium
+
+  * [d806ccb] Remove m68k-disable-getthreadcounttest.patch: it was based
+    on flawed interpretation of build results.  The build was on an
+    emulated machine, so the failure is presumed not to exist on a real
+    machine.
+  * [f0471a7] Patch to avoid calling member function when "this" pointer
+    is null. Can now enable the previously-failing
+    gtest_catch_exceptions_test.
+  * [ef663b6] Apply fix by Norber Lange to example makefiles.  Closes:
+    #847945.
+
+ -- Steve M. Robbins <smr@debian.org>  Thu, 22 Dec 2016 23:24:15 -0600
+
 googletest (1.8.0-5) unstable; urgency=medium
 
   * [ccfd8af] Honor "nocheck" in DEB_BUILD_OPTIONS.
