@@ -1,3 +1,4 @@
 py_test-fix.patch
 makefile-example.patch
 gtest-cc-use-cmath.patch
+stop-testinfo-run-calling-through-null.patch
