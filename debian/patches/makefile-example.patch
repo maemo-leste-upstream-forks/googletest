@@ -5,18 +5,22 @@ Author: Steve M. Robbins <smr@debian.org>
 Forwarded: not-needed
 Last-Update: 2016-08-16
 
---- gtest-1.6.0.orig/googletest/make/Makefile
-+++ gtest-1.6.0/googletest/make/Makefile
-@@ -14,7 +14,7 @@
+--- alioth.orig/googletest/make/Makefile
++++ alioth/googletest/make/Makefile
+@@ -14,10 +14,10 @@
  
  # Points to the root of Google Test, relative to where this file is.
  # Remember to tweak this if you move this file.
 -GTEST_DIR = ..
-+GTEST_DIR = /usr/src/gtest
++GTEST_DIR = $(dir $(lastword $(MAKEFILE_LIST)))..
  
  # Where to find user code.
- USER_DIR = ../samples
-@@ -31,8 +31,8 @@ TESTS = sample1_unittest
+-USER_DIR = ../samples
++USER_DIR = $(dir $(lastword $(MAKEFILE_LIST)))/../samples
+ 
+ # Flags passed to the preprocessor.
+ # Set Google Test's header directory as a system directory, such that
+@@ -33,8 +33,8 @@
  
  # All Google Test headers.  Usually you shouldn't change this
  # definition.
@@ -27,3 +31,23 @@ Last-Update: 2016-08-16
  
  # House-keeping build targets.
  
+--- alioth.orig/googlemock/make/Makefile
++++ alioth/googlemock/make/Makefile
+@@ -17,14 +17,14 @@
+ # Points to the root of Google Test, relative to where this file is.
+ # Remember to tweak this if you move this file, or if you want to use
+ # a copy of Google Test at a different location.
+-GTEST_DIR = ../../googletest
++GTEST_DIR = $(dir $(lastword $(MAKEFILE_LIST)))../../googletest
+ 
+ # Points to the root of Google Mock, relative to where this file is.
+ # Remember to tweak this if you move this file.
+-GMOCK_DIR = ..
++GMOCK_DIR = $(dir $(lastword $(MAKEFILE_LIST)))..
+ 
+ # Where to find user code.
+-USER_DIR = ../test
++USER_DIR = $(dir $(lastword $(MAKEFILE_LIST)))../test
+ 
+ # Flags passed to the preprocessor.
+ # Set Google Test and Google Mock's header directories as system
