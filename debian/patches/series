@@ -2,3 +2,4 @@ py_test-fix.patch
 makefile-example.patch
 gtest-cc-use-cmath.patch
 stop-testinfo-run-calling-through-null.patch
+0005-inconsistency-with-GTEST_HAS_PTHREAD-in-library-inte.patch
