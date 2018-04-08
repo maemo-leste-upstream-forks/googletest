@@ -1,7 +1,6 @@
 googlemock /usr/src/googletest
 googletest /usr/src/googletest
 CMakeLists.txt /usr/src/googletest
-googlemock/include /usr
-googletest/include /usr
+debian/tmp/usr
 googlemock/scripts/generator/gmock_gen.py usr/bin
 googlemock/scripts/generator/cpp usr/share/gmock

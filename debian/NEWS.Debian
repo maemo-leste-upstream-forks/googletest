@@ -1,3 +1,8 @@
+googletest (1.8.0-7) unstable; urgency=medium
+
+  Reinstated compiled libraries for both googletest and googlemock.
+
+
 googletest (1.8.0-1) unstable; urgency=medium
 
   Upstream has merged formerly-separate Google Test and Google Mock
