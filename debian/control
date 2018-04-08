@@ -4,7 +4,7 @@ Section: devel
 Maintainer: Steve M. Robbins <smr@debian.org>
 Uploaders: Giuseppe Iuculano <iuculano@debian.org>, Fredrik Hallenberg <hallon@debian.org>
 Priority: optional
-Build-Depends: debhelper (>= 9), cmake, python
+Build-Depends: debhelper (>= 9), cmake, python:native
 Standards-Version: 3.9.8
 Vcs-Git: git://anonscm.debian.org/collab-maint/gtest.git
 Vcs-Browser: https://anonscm.debian.org/gitweb/?p=collab-maint/gtest.git
