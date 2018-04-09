@@ -3,3 +3,4 @@ makefile-example.patch
 gtest-cc-use-cmath.patch
 stop-testinfo-run-calling-through-null.patch
 0005-inconsistency-with-GTEST_HAS_PTHREAD-in-library-inte.patch
+0006-Use-GNU-Install-Dirs-for-multiarch.patch
