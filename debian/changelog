@@ -1,6 +1,11 @@
-googletest (1.8.0-7) unstable; urgency=medium
+googletest (1.8.0-8) unstable; urgency=medium
 
   [ Steven Robbins ]
+  * [8275985] Change to debhelper compat=11.
+  * [d6465bc] Remove now-obsolete --parallel.
+
+  * [11261ca] 0006-Use-GNU-Install-Dirs-for-multiarch.patch: New.  Ensure
+    libraries installed into usr/lib/<triplet>.
 
   * [37e59b2]
     0005-inconsistency-with-GTEST_HAS_PTHREAD-in-library-inte.patch.
