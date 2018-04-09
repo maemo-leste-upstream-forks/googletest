@@ -1,13 +1,24 @@
 googletest (1.8.0-7) unstable; urgency=medium
 
   [ Steven Robbins ]
-  * [37e59b2] New patch 0005-inconsistency-with-GTEST_HAS_PTHREAD-in-library-inte.patch.
-    Helps to ensure tests compiled against gtest use same defines as gtest.  Closes: #789267.
-  * [34a076a] Annotate python build dependency with :native. Closes: #856915.
+
+  * [37e59b2]
+    0005-inconsistency-with-GTEST_HAS_PTHREAD-in-library-inte.patch.
+    Helps to ensure tests compiled against gtest use same defines as
+    gtest.  Closes: #789267.
+
+  * [34a076a] Annotate python build dependency with :native. Closes:
+    #856915.
+
   * [5100a5a] Update VCS to salsa.
-  * [19cfdd3] Remove Giuseppe Iuculano <iuculano@debian.org> at request of MIA Team.  Closes: #866837.
+
+  * [19cfdd3] Remove Giuseppe Iuculano <iuculano@debian.org> at request of
+    MIA Team.  Closes: #866837.
+
   * [527c04e] priority extra has been replaced by priority optional
-  * [49faee7] Provide compiled libraries for both googltest and googlemock.  Closes: #868234
+
+  * [49faee7] Provide compiled libraries for both googltest and
+    googlemock.  Closes: #868234
 
  -- Steve M. Robbins <smr@debian.org>  Sun, 08 Apr 2018 15:09:05 -0500
 
