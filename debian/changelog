@@ -1,4 +1,4 @@
-googletest (1.8.0-8) unstable; urgency=medium
+googletest (1.8.0-7) unstable; urgency=medium
 
   [ Steven Robbins ]
   * [8275985] Change to debhelper compat=11.
@@ -25,7 +25,7 @@ googletest (1.8.0-8) unstable; urgency=medium
   * [49faee7] Provide compiled libraries for both googltest and
     googlemock.  Closes: #868234
 
- -- Steve M. Robbins <smr@debian.org>  Sun, 08 Apr 2018 15:09:05 -0500
+ -- Steve M. Robbins <smr@debian.org>  Mon, 09 Apr 2018 23:39:24 -0500
 
 googletest (1.8.0-6) unstable; urgency=medium
 
