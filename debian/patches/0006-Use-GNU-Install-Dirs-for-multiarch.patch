@@ -3,29 +3,24 @@ Date: Sun, 8 Apr 2018 23:20:35 -0500
 Subject: Use GNU Install Dirs for multiarch.
 
 ---
- CMakeLists.txt            | 2 ++
- googlemock/CMakeLists.txt | 2 +-
- googletest/CMakeLists.txt | 2 +-
- 3 files changed, 4 insertions(+), 2 deletions(-)
+ googlemock/CMakeLists.txt | 4 +++-
+ googletest/CMakeLists.txt | 4 +++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8d2b552..727868f 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.6.2)
- 
- project( googletest-distribution )
+diff --git a/googlemock/CMakeLists.txt b/googlemock/CMakeLists.txt
+index beb259a..e45e659 100644
+--- a/googlemock/CMakeLists.txt
++++ b/googlemock/CMakeLists.txt
+@@ -5,6 +5,8 @@
+ # ctest.  You can select which tests to run using 'ctest -R regex'.
+ # For more options, run 'ctest --help'.
  
 +include(GNUInstallDirs)
 +
- enable_testing()
- 
- option(BUILD_GTEST "Builds the googletest subproject" OFF)
-diff --git a/googlemock/CMakeLists.txt b/googlemock/CMakeLists.txt
-index beb259a..e895cce 100644
---- a/googlemock/CMakeLists.txt
-+++ b/googlemock/CMakeLists.txt
-@@ -104,7 +104,7 @@ endif()
+ # BUILD_SHARED_LIBS is a standard CMake variable, but we declare it here to
+ # make it prominent in the GUI.
+ option(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." OFF)
+@@ -104,7 +106,7 @@ endif()
  #
  # Install rules
  install(TARGETS gmock gmock_main
@@ -35,10 +30,19 @@ index beb259a..e895cce 100644
    DESTINATION include)
  
 diff --git a/googletest/CMakeLists.txt b/googletest/CMakeLists.txt
-index 823c28c..0e7f06d 100644
+index 823c28c..6a3019e 100644
 --- a/googletest/CMakeLists.txt
 +++ b/googletest/CMakeLists.txt
-@@ -104,7 +104,7 @@ endif()
+@@ -5,6 +5,8 @@
+ # ctest.  You can select which tests to run using 'ctest -R regex'.
+ # For more options, run 'ctest --help'.
+ 
++include(GNUInstallDirs)
++
+ # BUILD_SHARED_LIBS is a standard CMake variable, but we declare it here to
+ # make it prominent in the GUI.
+ option(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." OFF)
+@@ -104,7 +106,7 @@ endif()
  #
  # Install rules
  install(TARGETS gtest gtest_main
