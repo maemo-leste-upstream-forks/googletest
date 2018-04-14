@@ -1,3 +1,11 @@
+googletest (1.8.0-8) unstable; urgency=medium
+
+  [ Steven Robbins ]
+  * [625db06] Move include(GNUInstallDirs) into the exported googletest &
+    googlemock CMakeLists.  Closes: #895505.
+
+ -- Steve M. Robbins <smr@debian.org>  Sat, 14 Apr 2018 17:18:06 -0500
+
 googletest (1.8.0-7) unstable; urgency=medium
 
   [ Steven Robbins ]
