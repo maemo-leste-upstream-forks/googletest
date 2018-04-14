@@ -1,7 +1,9 @@
-From: "Eugene V. Lyubimkin" <jackyf@debian.org>
+From: Steven Robbins <smr@debian.org>
 Date: Sun, 8 Apr 2018 14:29:43 -0500
 Subject: inconsistency with GTEST_HAS_PTHREAD in library interface leads to
  crashes on non-linux
+
+From: "Eugene V. Lyubimkin" <jackyf@debian.org>
 
 Current libgtest-dev has two different means to determine if
 GTEST_HAS_PTHREAD is defined: one in CMake rules and second one in
