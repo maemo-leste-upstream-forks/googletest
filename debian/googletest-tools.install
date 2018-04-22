@@ -1,0 +1,3 @@
+googlemock/scripts/generator/gmock_gen.py usr/bin
+googlemock/scripts/generator/cpp usr/share/cpp
+

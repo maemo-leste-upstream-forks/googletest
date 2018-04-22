@@ -33,10 +33,10 @@ override_dh_install:
 	find debian/googletest/usr/src/googletest -iname LICENSE -o -iname .gitignore -o -iname '*.pyc' | xargs rm
 	find debian/googletest/usr/src/googletest -iname '*.py' | xargs chmod -x
 	rm -rf debian/googletest/usr/src/googletest/*/msvc
-	for f in $$(ls debian/googletest/usr/bin/*.py); \
+	for f in $$(ls debian/googletest-tools/usr/bin/*.py); \
 	  do mv $$f $$(echo $$f | sed s/\.py//); \
 	done
-	chmod a-x debian/googletest/usr/share/gmock/cpp/*
+	chmod a-x debian/googletest-tools/usr/share/cpp/*
 
 override_dh_clean:
 	dh_clean

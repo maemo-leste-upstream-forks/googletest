@@ -5,15 +5,14 @@ Maintainer: Steve M. Robbins <smr@debian.org>
 Uploaders: Fredrik Hallenberg <hallon@debian.org>
 Priority: optional
 Build-Depends: debhelper (>= 11), cmake, python:native
-Standards-Version: 3.9.8
+Standards-Version: 4.1.4
 Vcs-Git: https://salsa.debian.org/debian/googletest.git
 Vcs-Browser: https://salsa.debian.org/debian/googletest
 
 Package: googletest
-Architecture: any
-Multi-Arch: same
+Architecture: all
 Section: libdevel
-Depends: ${shlibs:Depends}, ${misc:Depends}, python:any
+Depends: ${misc:Depends}
 Conflicts: libgtest-dev (<< 1.8.0), google-mock (<< 1.8.0)
 Replaces: libgtest-dev (<< 1.8.0), google-mock (<< 1.8.0)
 Description: Google's C++ test framework sources
@@ -51,6 +50,17 @@ Description: Google's C++ test framework sources
  the source code to build the google test and mock libraries.  This enables
  building the google test and mock libraries with the same flags as the
  C++ code under test.
+
+Package: googletest-tools
+Architecture: any
+Multi-Arch: same
+Section: libdevel
+Depends: ${misc:Depends}, python:any
+Conflicts: googletest (<< 1.8.0-8)
+Replaces: googletest (<< 1.8.0-8)
+Description: Google's C++ test framework sources
+ This package provides tools to be used with Google Test and/or Google
+ Mock.
 
 Package: libgtest-dev
 Architecture: any
