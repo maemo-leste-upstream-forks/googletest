@@ -9,6 +9,8 @@ googletest (1.8.0-9) unstable; urgency=medium
   googletest.  Use this package if you wish to compile your own
   version of the gtest/gmock library for testing.
 
+  The tool "gmock_gen" is now in package googletest-tools.
+
 
 googletest (1.8.0-7) unstable; urgency=medium
 
