@@ -1,13 +1,14 @@
-googletest (1.8.0-9) UNRELEASED; urgency=medium
+googletest (1.8.0-9) unstable; urgency=medium
 
   [ Steven Robbins ]
-  * [565e7e9] Move the gtest lib and includes into libgtest-dev.  This is
-    no longer a transitional package.  Move the gmock lib and includes
-    into new libgmock-dev.  Closes: #787330
+  * [565e7e9] Separate the source and pre-built binaries (closes: #896559):
+    Move the gtest lib and includes into libgtest-dev.  This is no longer
+    a transitional package.  Move the gmock lib and includes into new
+    libgmock-dev.  Closes: #787330
   * Move tool "gmock_gen" into new package googletest-tools.  Closes:
     #846324.
 
- -- Steve M. Robbins <smr@debian.org>  Sat, 21 Apr 2018 23:49:15 -0500
+ -- Steve M. Robbins <smr@debian.org>  Mon, 23 Apr 2018 21:01:11 -0500
 
 googletest (1.8.0-8) unstable; urgency=medium
 
