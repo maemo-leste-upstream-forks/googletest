@@ -36,7 +36,7 @@ override_dh_install:
 	for f in $$(ls debian/googletest-tools/usr/bin/*.py); \
 	  do mv $$f $$(echo $$f | sed s/\.py//); \
 	done
-	chmod a-x -R debian/googletest-tools/usr/share/cpp/*
+	chmod a-x -R debian/googletest-tools/usr/share/googletest-tools/generator/cpp/*
 
 override_dh_clean:
 	dh_clean
