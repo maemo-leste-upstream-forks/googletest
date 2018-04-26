@@ -1,3 +1,10 @@
+googletest (1.8.0-10) unstable; urgency=medium
+
+  [ Steven Robbins ]
+  * [2423428] Fix the conflicts/replaces versioning.  Closes: #896880.
+
+ -- Steve M. Robbins <smr@debian.org>  Wed, 25 Apr 2018 20:28:02 -0500
+
 googletest (1.8.0-9) unstable; urgency=medium
 
   [ Steven Robbins ]
