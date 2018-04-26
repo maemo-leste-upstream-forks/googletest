@@ -57,8 +57,8 @@ Architecture: any
 Multi-Arch: same
 Section: libdevel
 Depends: ${misc:Depends}, python:any
-Conflicts: googletest (<< 1.8.0-8)
-Replaces: googletest (<< 1.8.0-8)
+Conflicts: googletest (<= 1.8.0-8)
+Replaces: googletest (<= 1.8.0-8)
 Description: Google's C++ test framework sources
  This package provides tools to be used with Google Test and/or Google
  Mock.
@@ -69,8 +69,8 @@ Multi-Arch: same
 Section: libdevel
 Priority: optional
 Depends: ${misc:Depends}, googletest (= ${binary:Version})
-Conflicts: googletest (<< 1.8.0-8)
-Replaces: googletest (<< 1.8.0-8)
+Conflicts: googletest (<= 1.8.0-8)
+Replaces: googletest (<= 1.8.0-8)
 Description: Google's framework for writing C++ tests [source code]
  Google's framework for writing C++ tests on a variety of platforms. Based on
  the xUnit architecture. Supports automatic test discovery, a rich set of
@@ -84,8 +84,8 @@ Multi-Arch: same
 Section: libdevel
 Priority: optional
 Depends: ${misc:Depends}, libgtest-dev (= ${binary:Version})
-Conflicts: googletest (<< 1.8.0-8)
-Replaces: googletest (<< 1.8.0-8)
+Conflicts: googletest (<= 1.8.0-8)
+Replaces: googletest (<= 1.8.0-8)
 Description: Google's framework for writing C++ tests [source code]
  Inspired by jMock, EasyMock, and Hamcrest, and designed with C++'s 
  specifics in mind, it can help you derive better designs of your 
