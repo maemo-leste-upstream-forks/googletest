@@ -71,7 +71,7 @@ Priority: optional
 Depends: ${misc:Depends}, googletest (= ${binary:Version})
 Conflicts: googletest (<= 1.8.0-8)
 Replaces: googletest (<= 1.8.0-8)
-Description: Google's framework for writing C++ tests [source code]
+Description: Google's framework for writing C++ tests
  Google's framework for writing C++ tests on a variety of platforms. Based on
  the xUnit architecture. Supports automatic test discovery, a rich set of
  assertions, user-defined assertions, death tests, fatal and non-fatal failures,
@@ -86,7 +86,7 @@ Priority: optional
 Depends: ${misc:Depends}, libgtest-dev (= ${binary:Version})
 Conflicts: googletest (<= 1.8.0-8)
 Replaces: googletest (<= 1.8.0-8)
-Description: Google's framework for writing C++ tests [source code]
+Description: Google's framework for writing C++ tests
  Inspired by jMock, EasyMock, and Hamcrest, and designed with C++'s 
  specifics in mind, it can help you derive better designs of your 
  system and write better tests.
