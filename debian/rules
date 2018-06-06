@@ -4,6 +4,8 @@
 DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
 CXXFLAGS:=$(shell dpkg-buildflags --get CXXFLAGS)
 
+CXXFLAGS += -fPIC
+
 ifeq ($(DEB_HOST_ARCH),hppa)
 CXXFLAGS += -mlong-calls
 else ifeq ($(DEB_BUILD_ARCH), mips)
