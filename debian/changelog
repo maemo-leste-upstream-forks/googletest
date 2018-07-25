@@ -1,12 +1,16 @@
 googletest (1.8.0-10.1) unstable; urgency=medium
 
+  [ Steven Robbins ]
+  * Tweak both -dev package descriptions to clarify the source code is not
+    included.  Closes: #897920.
+
   [ Christopher James Halse Rogers ]
   * Rebuild with -fPIC (Closes: #904566).
 
   [ Simon Quigley ]
   * Non-maintainer upload.
 
- -- Simon Quigley <tsimonq2@ubuntu.com>  Wed, 25 Jul 2018 01:21:09 -0500
+ -- Simon Quigley <tsimonq2@ubuntu.com>  Wed, 25 Jul 2018 09:52:46 +0000
 
 googletest (1.8.0-10) unstable; urgency=medium
 
