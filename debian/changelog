@@ -6,9 +6,9 @@ googletest (1.8.1-1) unstable; urgency=medium
   * d/control: Remove trailing whitespaces
 
   [ Steve M. Robbins ]
-  * [e4d4dc9] New upstream version 1.8.1
+  * [e4d4dc9] New upstream version 1.8.1.  Closes: #909235.
 
- -- Steve M. Robbins <smr@debian.org>  Tue, 02 Oct 2018 22:46:49 -0500
+ -- Steve M. Robbins <smr@debian.org>  Tue, 02 Oct 2018 22:53:32 -0500
 
 googletest (1.8.0-10.1) unstable; urgency=medium
 
