@@ -1,3 +1,10 @@
+googletest (1.8.1-2) UNRELEASED; urgency=medium
+
+  [ Steven Robbins ]
+  * [59bbd1d] Run autoreconf with flags -vif.  Closes: #910305.
+
+ -- Steve M. Robbins <smr@debian.org>  Thu, 04 Oct 2018 20:35:12 -0500
+
 googletest (1.8.1-1) unstable; urgency=medium
 
   [ Ondřej Nový ]
