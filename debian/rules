@@ -35,6 +35,7 @@ endif
 
 override_dh_install:
 	dh_install
+	find debian/googletest/usr/src/googletest -iname autom4te.cache -type d | xargs rm -rf
 	find debian/googletest/usr/src/googletest -iname LICENSE -o -iname .gitignore -o -iname '*.pyc' | xargs rm
 	find debian/googletest/usr/src/googletest -iname '*.py' | xargs chmod -x
 	rm -rf debian/googletest/usr/src/googletest/*/msvc
