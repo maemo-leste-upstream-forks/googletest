@@ -1,9 +1,12 @@
-googletest (1.8.1-2) UNRELEASED; urgency=medium
+googletest (1.8.1-2) unstable; urgency=medium
 
   [ Steven Robbins ]
   * [59bbd1d] Run autoreconf with flags -vif.
+  * [9733486] Do not install autom4t3.cache output into /usr/src.  This
+    makes the builds reproducible (Closes: #914091) and makes the
+    resulting binary debs multi-arch coinstallable (Closes: #914874).
 
- -- Steve M. Robbins <smr@debian.org>  Thu, 04 Oct 2018 20:35:12 -0500
+ -- Steve M. Robbins <smr@debian.org>  Wed, 28 Nov 2018 22:30:37 -0600
 
 googletest (1.8.1-1) unstable; urgency=medium
 
