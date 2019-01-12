@@ -9,11 +9,11 @@ CXXFLAGS += -fPIC
 ifeq ($(DEB_HOST_ARCH),hppa)
 CXXFLAGS += -mlong-calls
 else ifeq ($(DEB_BUILD_ARCH), mips)
-CXXFLAGS += -mxgot
+CXXFLAGS += -mxgot -g1
 else ifeq ($(DEB_BUILD_ARCH), mips64el)
 CXXFLAGS += -mxgot
 else ifeq ($(DEB_BUILD_ARCH), mipsel)
-CXXFLAGS += -mxgot
+CXXFLAGS += -mxgot -g1
 endif
 
 export CXXFLAGS
