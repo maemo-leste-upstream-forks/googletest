@@ -1,3 +1,12 @@
+googletest (1.9.0.20190831-1) UNRELEASED; urgency=medium
+
+  [ Steven Robbins ]
+  * [2e14a8e] New upstream version 1.9.0.20190831
+  * [6a82f4b] Remove override_dh_autoreconf as 1.9.x has no autoconf support.
+  * [c12dd95] Rebase patches
+
+ -- Steve M. Robbins <smr@debian.org>  Sat, 31 Aug 2019 07:00:23 -0500
+
 googletest (1.8.1-3) unstable; urgency=medium
 
   [ Steven Robbins ]
