@@ -1,4 +1,3 @@
-makefile-example.patch
 gtest-cc-use-cmath.patch
 0003-inconsistency-with-GTEST_HAS_PTHREAD-in-library-inte.patch
 0004-Set-import-path-for-private-python-module.patch
