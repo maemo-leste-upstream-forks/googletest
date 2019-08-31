@@ -10,8 +10,8 @@ Vcs-Git: https://salsa.debian.org/debian/googletest.git
 Vcs-Browser: https://salsa.debian.org/debian/googletest
 
 Package: googletest
-Architecture: any
-Multi-Arch: same
+Architecture: all
+Multi-Arch: foreign
 Section: libdevel
 Depends: ${misc:Depends}
 Conflicts: libgtest-dev (<< 1.8.0), google-mock (<< 1.8.0)
@@ -67,7 +67,7 @@ Package: libgtest-dev
 Architecture: any
 Multi-Arch: same
 Section: libdevel
-Depends: ${misc:Depends}, googletest (= ${binary:Version})
+Depends: ${misc:Depends}, googletest (= ${source:Version})
 Conflicts: googletest (<= 1.8.0-8)
 Replaces: googletest (<= 1.8.0-8)
 Description: Google's framework for writing C++ tests
@@ -109,7 +109,7 @@ Package: google-mock
 Architecture: any
 Multi-Arch: same
 Section: oldlibs
-Depends: ${misc:Depends}, googletest (= ${binary:Version})
+Depends: ${misc:Depends}, googletest (= ${source:Version})
 Description: Google's framework for writing and using C++ mock classes
  NOTE: This is a transitional package, retained for backwards compatibility.
  New code should instead use either package libgmock-dev (for compiled lib)
