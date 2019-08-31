@@ -1,5 +1,4 @@
 gtest-cc-use-cmath.patch
-0003-inconsistency-with-GTEST_HAS_PTHREAD-in-library-inte.patch
-0004-Set-import-path-for-private-python-module.patch
-0005-Stop-TestInfo-Run-calling-a-function-through-null-po.patch
-0006-Remove-Werror-from-cxx_base_flags.patch
+0002-inconsistency-with-GTEST_HAS_PTHREAD-in-library-inte.patch
+0003-Set-import-path-for-private-python-module.patch
+0004-Remove-Werror-from-cxx_base_flags.patch
