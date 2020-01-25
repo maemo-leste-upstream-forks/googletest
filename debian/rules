@@ -41,6 +41,10 @@ override_dh_prep-arch:
 	dh_prep
 	cp googlemock/scripts/generator/gmock_gen.py googlemock/scripts/generator/gmock_gen
 
+override_dh_install:
+	dh_install
+	find debian -iname '*.py' -print0 | xargs -0 chmod -x
+
 override_dh_clean:
 	dh_clean
 	rm -f test/*.pyc
