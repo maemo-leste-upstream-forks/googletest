@@ -32,7 +32,7 @@ endif
 
 override_dh_prep-indep:
 	dh_prep
-	find googletest -iname autom4te.cache -type d | xargs rm -rf
+	find googletest -iname autom4te.cache -o -iname __pycache__ -type d | xargs rm -rf
 	find googletest -iname LICENSE -o -iname .gitignore -o -iname '*.pyc' | xargs rm
 	find googletest -iname '*.py' | xargs chmod -x
 	rm -rf googletest/*/msvc
