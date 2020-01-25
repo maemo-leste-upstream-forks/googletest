@@ -83,3 +83,5 @@ googlemock/gtest
 /ALL_BUILD.vcxproj.filters
 /ALL_BUILD.vcxproj
 .pc
+googletest/generated
+install_manifest.txt
