@@ -1,20 +1,26 @@
+googletest (1.9.0.20190831-3) unstable; urgency=medium
+
+  * Use debhelper v12.
+  * Replace dh_install override with overrides of dh_prep -- one for
+    indep and one for arch.  Adjust the googletest-tools.install to
+    install the non-.py file.
+  * Do not include pkgconfig files in output.  Re-opens #948570.
+
+ -- Steve M. Robbins <smr@debian.org>  Sat, 25 Jan 2020 16:26:58 -0600
+
 googletest (1.9.0.20190831-2) unstable; urgency=medium
 
-  [ Steven Robbins ]
   * [f452d22] Convert package "googletest" to arch any / foreign (closes: #931098).
     The bug report also suggests to convert googletest-tools.  At present,
     it is true that googletest-tools contains a single script and therefore
     is bit-identical across architectures.  However, it could just as easily
     contain compiled tools in future; therefore, will leave as arch any.
-
-  [ Steve Robbins ]
   * Include pkgconfig files in -dev packages.  From Helge Bahmann.  Closes: #948570.
 
  -- Steve M. Robbins <smr@debian.org>  Sat, 25 Jan 2020 11:25:44 -0600
 
 googletest (1.9.0.20190831-1) unstable; urgency=medium
 
-  [ Steven Robbins ]
   * [2e14a8e] New upstream version 1.9.0.20190831.  Builds with gcc 9 (closes #925702).
   * [6a82f4b] Remove override_dh_autoreconf as 1.9.x has no autoconf support.
   * [c12dd95] Rebase patches
