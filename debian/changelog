@@ -1,3 +1,10 @@
+googletest (1.10.0-1) unstable; urgency=medium
+
+  [ Steve Robbins ]
+  * New upstream version 1.10.0
+
+ -- Steve M. Robbins <smr@debian.org>  Sat, 25 Jan 2020 18:22:21 -0600
+
 googletest (1.9.0.20190831-3) unstable; urgency=medium
 
   * Use debhelper v12.
