@@ -84,3 +84,5 @@ googlemock/gtest
 /ALL_BUILD.vcxproj
 .pc
 googletest/generated
+googlemock/scripts/generator/gmock_gen
+install_manifest.txt
