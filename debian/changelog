@@ -2,8 +2,13 @@ googletest (1.10.0-1) unstable; urgency=medium
 
   [ Steve Robbins ]
   * New upstream version 1.10.0
+  * Standards-Version 4.5.0
+  * Remove now-obsolete preinst/postinst/postrm helper files used to convert dir
+    to symlink in version 1.8.0-1.
+  * Include pkgconfig files in -dev packages (closes: #948570).
+    Patch from Helge Bahmann.
 
- -- Steve M. Robbins <smr@debian.org>  Sat, 25 Jan 2020 18:22:21 -0600
+ -- Steve M. Robbins <smr@debian.org>  Sun, 26 Jan 2020 08:55:48 -0600
 
 googletest (1.9.0.20190831-3) unstable; urgency=medium
 
