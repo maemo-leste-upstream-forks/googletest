@@ -1,3 +1,9 @@
+googletest (1.10.0-2) unstable; urgency=medium
+
+  * Source upload.
+
+ -- Steve M. Robbins <smr@debian.org>  Tue, 28 Jan 2020 12:53:48 -0600
+
 googletest (1.10.0-1) unstable; urgency=medium
 
   [ Steve Robbins ]
