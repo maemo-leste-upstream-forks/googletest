@@ -1,3 +1,11 @@
+googletest (1.10.0-3) unstable; urgency=medium
+
+  [ Steve Robbins ]
+  * Set pkgconfig prefix to /usr.  Closes: #958099
+  * Downgrade optimization to -g1 when building on sh4.  Closes: #958659.
+
+ -- Steve M. Robbins <smr@debian.org>  Mon, 27 Apr 2020 00:08:39 -0500
+
 googletest (1.10.0-2) unstable; urgency=medium
 
   * Source upload.
