@@ -14,6 +14,8 @@ else ifeq ($(DEB_BUILD_ARCH), mips64el)
 CXXFLAGS += -mxgot
 else ifeq ($(DEB_BUILD_ARCH), mipsel)
 CXXFLAGS += -mxgot -g1
+else ifeq ($(DEB_BUILD_ARCH), sh4)
+CXXFLAGS += -g1
 endif
 
 export CXXFLAGS
