@@ -3,3 +3,4 @@ gtest-cc-use-cmath.patch
 0003-Set-import-path-for-private-python-module.patch
 0004-Remove-Werror-from-cxx_base_flags.patch
 0005-Use-python-3-for-installed-script-gmock_gen.patch
+0006-Fix-prefix-setting-for-pkgconfig-files.patch

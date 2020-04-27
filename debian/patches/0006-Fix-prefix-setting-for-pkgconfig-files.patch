@@ -1,0 +1,53 @@
+From: Steve Robbins <steve@sumost.ca>
+Date: Sun, 26 Apr 2020 23:55:54 -0500
+Subject: Fix prefix setting for pkgconfig files.
+
+Set prefix to /usr.
+Fixes bug 958099.
+---
+ googlemock/cmake/gmock.pc.in      | 2 +-
+ googlemock/cmake/gmock_main.pc.in | 2 +-
+ googletest/cmake/gtest.pc.in      | 2 +-
+ googletest/cmake/gtest_main.pc.in | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/googlemock/cmake/gmock.pc.in b/googlemock/cmake/gmock.pc.in
+index 08e0454..194f0e5 100644
+--- a/googlemock/cmake/gmock.pc.in
++++ b/googlemock/cmake/gmock.pc.in
+@@ -1,4 +1,4 @@
+-prefix=${pcfiledir}/../..
++prefix=/usr
+ libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+ includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+ 
+diff --git a/googlemock/cmake/gmock_main.pc.in b/googlemock/cmake/gmock_main.pc.in
+index b22fe61..f76f872 100644
+--- a/googlemock/cmake/gmock_main.pc.in
++++ b/googlemock/cmake/gmock_main.pc.in
+@@ -1,4 +1,4 @@
+-prefix=${pcfiledir}/../..
++prefix=/usr
+ libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+ includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+ 
+diff --git a/googletest/cmake/gtest.pc.in b/googletest/cmake/gtest.pc.in
+index 9aae29e..8280c40 100644
+--- a/googletest/cmake/gtest.pc.in
++++ b/googletest/cmake/gtest.pc.in
+@@ -1,4 +1,4 @@
+-prefix=${pcfiledir}/../..
++prefix=/usr
+ libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+ includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+ 
+diff --git a/googletest/cmake/gtest_main.pc.in b/googletest/cmake/gtest_main.pc.in
+index 915f297..92cc4ea 100644
+--- a/googletest/cmake/gtest_main.pc.in
++++ b/googletest/cmake/gtest_main.pc.in
+@@ -1,4 +1,4 @@
+-prefix=${pcfiledir}/../..
++prefix=/usr
+ libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+ includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+ 

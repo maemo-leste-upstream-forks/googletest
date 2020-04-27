@@ -9,7 +9,7 @@ Fix for https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=846254
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/googletest/src/gtest.cc b/googletest/src/gtest.cc
-index cbd48d3..7ac9241 100644
+index a5b4e5a..114855d 100644
 --- a/googletest/src/gtest.cc
 +++ b/googletest/src/gtest.cc
 @@ -35,7 +35,7 @@
