@@ -4,7 +4,7 @@ Section: devel
 Maintainer: Steve M. Robbins <smr@debian.org>
 Uploaders: Fredrik Hallenberg <hallon@debian.org>
 Priority: optional
-Build-Depends: debhelper (>= 12), cmake, python3:native
+Build-Depends: debhelper (>= 13), cmake, python3:native
 Standards-Version: 4.5.0
 Vcs-Git: https://salsa.debian.org/debian/googletest.git
 Vcs-Browser: https://salsa.debian.org/debian/googletest
