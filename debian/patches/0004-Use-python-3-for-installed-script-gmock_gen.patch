@@ -7,7 +7,7 @@ Subject: Use python 3 for installed script gmock_gen.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/googlemock/scripts/generator/gmock_gen.py b/googlemock/scripts/generator/gmock_gen.py
-index 68af073..f9905a4 100755
+index df9613c..d708c44 100755
 --- a/googlemock/scripts/generator/gmock_gen.py
 +++ b/googlemock/scripts/generator/gmock_gen.py
 @@ -1,4 +1,4 @@

@@ -7,7 +7,7 @@ Subject: Remove -Werror from cxx_base_flags.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/googletest/cmake/internal_utils.cmake b/googletest/cmake/internal_utils.cmake
-index f03dac7..f52c9bc 100644
+index 5d8a13c..cfbc75f 100644
 --- a/googletest/cmake/internal_utils.cmake
 +++ b/googletest/cmake/internal_utils.cmake
 @@ -93,7 +93,7 @@ macro(config_compiler_and_linker)
