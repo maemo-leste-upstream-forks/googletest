@@ -3,8 +3,11 @@ googletest (1.10.0.20201018-1) unstable; urgency=medium
   [ Steve Robbins ]
   * [7053365] New upstream version 1.10.0.20201018 (upstream master branch
     from 2020-10-18.
+  * [0c8dd3d] Update to debhlper v13.
+  * [978eb81] Install cmake files.
+  * [699922c] Remove now-obsolete lintian overrides.
 
- -- Steve M. Robbins <smr@debian.org>  Sun, 18 Oct 2020 21:41:06 -0500
+ -- Steve M. Robbins <smr@debian.org>  Sun, 18 Oct 2020 22:48:32 -0500
 
 googletest (1.10.0.20200926-1) unstable; urgency=medium
 
