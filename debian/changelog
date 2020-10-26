@@ -1,3 +1,13 @@
+googletest (1.10.0.20201025-1) unstable; urgency=medium
+
+  [ Steve Robbins ]
+  * [9ce1377] New upstream version 1.10.0.20201025
+  * [2e546ca] New 0005-Add-GoogleTest-version-to-each-sub-project-to-allow-.patch
+    to allow builds using /usr/src/googletest/googletest.  The recommended method 
+    is to build using /usr/src/googletest, however.  Closes: #972618, #972774, #972775.
+
+ -- Steve M. Robbins <smr@debian.org>  Sun, 25 Oct 2020 23:32:56 -0500
+
 googletest (1.10.0.20201018-1) unstable; urgency=medium
 
   [ Steve Robbins ]
