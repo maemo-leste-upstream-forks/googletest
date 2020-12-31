@@ -8,13 +8,13 @@ CXXFLAGS += -fPIC
 
 ifeq ($(DEB_HOST_ARCH),hppa)
 CXXFLAGS += -mlong-calls
-else ifeq ($(DEB_BUILD_ARCH), mips)
+else ifeq ($(DEB_HOST_ARCH), mips)
 CXXFLAGS += -mxgot -g1
-else ifeq ($(DEB_BUILD_ARCH), mips64el)
+else ifeq ($(DEB_HOST_ARCH), mips64el)
 CXXFLAGS += -mxgot
-else ifeq ($(DEB_BUILD_ARCH), mipsel)
+else ifeq ($(DEB_HOST_ARCH), mipsel)
 CXXFLAGS += -mxgot -g1
-else ifeq ($(DEB_BUILD_ARCH), sh4)
+else ifeq ($(DEB_HOST_ARCH), sh4)
 CXXFLAGS += -g1
 endif
 
@@ -35,7 +35,7 @@ endif
 override_dh_prep-indep:
 	dh_prep
 	find googletest -iname autom4te.cache -o -iname __pycache__ -type d | xargs rm -rf
-	find googletest -iname LICENSE -o -iname .gitignore -o -iname '*.pyc' | xargs rm
+	find googletest -iname LICENSE -o -iname .gitignore -o -iname '*.pyc' | xargs rm -f
 	find googletest -iname '*.py' | xargs chmod -x
 	rm -rf googletest/*/msvc
 

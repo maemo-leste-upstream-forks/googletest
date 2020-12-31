@@ -1,3 +1,14 @@
+googletest (1.10.0.20201025-1.1) unstable; urgency=medium
+
+  [Mattias Ellert]
+  * Non-maintainer upload.
+  * [543d4c4] Fix gtest-help-test failure on GNU/kFreeBSD
+    https://github.com/google/googletest/pull/3189
+  * [31ad1eb] Port to GNU/Hurd
+    https://github.com/google/googletest/pull/3200
+
+ -- Mattias Ellert <mattias.ellert@physics.uu.se>  Wed, 30 Dec 2020 19:25:04 +0100
+
 googletest (1.10.0.20201025-1) unstable; urgency=medium
 
   [ Steve Robbins ]
